@@ -21,11 +21,17 @@ distributed application.
 TODO - what transport-layer protocol do you use? TCP? UDP? What port number(s)? Why did you 
 choose this transport layer protocol?
 
+The project uses TCP for handling communication. The port number of the TCP server 1025.
+
 ## The architecture
 
 TODO - show the general architecture of your network. Which part is a server? Who are clients? 
 Do you have one or several servers? Perhaps include a picture here. 
 
+The architecture consists of a central server that connects to a greenhouse simulator, and potentially
+multiple control panels. The greenhouse simulator is the link between all the nodes and the rest of the system.
+
+[Server Architecture](images/GreenhouseServerArchitecture.png)
 
 ## The flow of information and events
 
