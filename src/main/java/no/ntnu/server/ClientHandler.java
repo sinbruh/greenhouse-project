@@ -59,7 +59,25 @@ public class ClientHandler extends Thread {
     }
 
     private Command readClientRequest() {
+        Message clientCommand = null;
+        try {
+            String rawClientRequest = socketReader.readLine();
+            clientCommand = MessageSerializer.fromString(rawClientRequest);
+            if (clientCommand instanceof Command) {
+                System.err.println("Invalid message recieved");
+                clientCommand = null;
+            }
+        } catch (IOException e) {
+            System.err.println("Could not recieve client request: " + e.getMessage());
+        }
+        return (Command) clientCommand;
+    }
+
+    private void sendResponseToClient(Message response) {
         //TODO finish implementation
-        return null;
+    }
+
+    private void notifyAllClients(Message response) {
+        server.notifyAllClients();
     }
 }
