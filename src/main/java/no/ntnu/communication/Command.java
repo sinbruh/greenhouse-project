@@ -1,4 +1,4 @@
-package no.ntnu.messages;
+package no.ntnu.communication;
 
 public abstract class Command extends Message{
 

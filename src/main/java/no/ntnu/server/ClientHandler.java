@@ -1,12 +1,14 @@
 package no.ntnu.server;
 
+import java.io.PrintWriter;
 import no.ntnu.greenhouse.GreenhouseSimulator;
-import no.ntnu.messages.Message;
-import no.ntnu.messages.Command;
+import no.ntnu.communication.Message;
+import no.ntnu.communication.Command;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import no.ntnu.communication.MessageSerializer;
 
 public class ClientHandler extends Thread {
     private BufferedReader socketReader;
@@ -54,6 +56,15 @@ public class ClientHandler extends Thread {
                 System.err.println("Could not execute command: " + e.getMessage());
             }
 
+            if (response != null) {
+                sendResponseToClient(response);
+            }
+
+            //TODO, if the message is something all clients need to be notified of,
+            //then use notify clients method in server class
+
+
+
             System.out.println("Recieved from client: " + clientCommand);
         } while (response != null);
     }
@@ -68,16 +79,22 @@ public class ClientHandler extends Thread {
                 clientCommand = null;
             }
         } catch (IOException e) {
-            System.err.println("Could not recieve client request: " + e.getMessage());
+            System.err.println("Could not receive client request: " + e.getMessage());
         }
         return (Command) clientCommand;
     }
-
+ 
     private void sendResponseToClient(Message response) {
-        //TODO finish implementation
+        try {
+            new PrintWriter(clientSocket.getOutputStream(), true)
+                .println(MessageSerializer.toString(response));
+            System.out.println("Sent response to " + clientSocket.getRemoteSocketAddress());
+        } catch (IOException e) {
+            System.err.println("IOException" + e.getMessage());
+        }
     }
 
     private void notifyAllClients(Message response) {
-        server.notifyAllClients();
+        server.notifyAllClients(response);
     }
 }

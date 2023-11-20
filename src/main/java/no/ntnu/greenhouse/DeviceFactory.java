@@ -1,5 +1,7 @@
 package no.ntnu.greenhouse;
 
+import java.util.List;
+
 /**
  * A factory for producing sensors and actuators of specific types.
  */
@@ -13,8 +15,9 @@ public class DeviceFactory {
   private static final double NORMAL_GREENHOUSE_HUMIDITY = 80;
   private static final String HUMIDITY_UNIT = "%";
   private static final String SENSOR_TYPE_TEMPERATURE = "temperature";
-
   private static int nextNodeId = 1;
+  private static final String SENSOR_NODE_ID = "10";
+
 
   /**
    * Constructing the factory is not allowed.
@@ -74,7 +77,7 @@ public class DeviceFactory {
    */
   public static Sensor createTemperatureSensor() {
     return new Sensor(SENSOR_TYPE_TEMPERATURE, MIN_TEMPERATURE, MAX_TEMPERATURE,
-        randomize(NORMAL_GREENHOUSE_TEMPERATURE, 1.0), TEMPERATURE_UNIT);
+        randomize(NORMAL_GREENHOUSE_TEMPERATURE, 1.0), TEMPERATURE_UNIT, SENSOR_NODE_ID);
   }
 
   /**
@@ -84,7 +87,7 @@ public class DeviceFactory {
    */
   public static Sensor createHumiditySensor() {
     return new Sensor("humidity", MIN_HUMIDITY, MAX_HUMIDITY,
-        randomize(NORMAL_GREENHOUSE_HUMIDITY, 5.0), HUMIDITY_UNIT);
+        randomize(NORMAL_GREENHOUSE_HUMIDITY, 5.0), HUMIDITY_UNIT, SENSOR_NODE_ID);
   }
 
   /**

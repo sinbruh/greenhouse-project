@@ -1,5 +1,8 @@
 package no.ntnu.greenhouse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A sensor which can sense the environment in a specific way.
  */
@@ -7,6 +10,7 @@ public class Sensor {
   private final SensorReading reading;
   private final double min;
   private final double max;
+  private final String sensorNodeId;
 
   /**
    * Create a sensor.
@@ -16,12 +20,24 @@ public class Sensor {
    * @param max     Maximum allowed value
    * @param current The current (starting) value of the sensor
    * @param unit    The measurement unit. Examples: "%", "C", "lux"
+   * @param sensorNodeId The id for the sensor node.
    */
-  public Sensor(String type, double min, double max, double current, String unit) {
+  public Sensor(String type, double min, double max, double current, String unit, String sensorNodeId) {
     this.reading = new SensorReading(type, current, unit);
     this.min = min;
     this.max = max;
+    this.sensorNodeId = sensorNodeId;
     ensureValueBoundsAndPrecision(current);
+
+  }
+
+  /**
+   * Getter for sensor node id.
+   *
+   * @return returns the sensor node id.
+   */
+  public String getSensorNodeId() {
+    return sensorNodeId;
   }
 
   public String getType() {
@@ -44,7 +60,7 @@ public class Sensor {
    */
   public Sensor createClone() {
     return new Sensor(this.reading.getType(), this.min, this.max,
-        this.reading.getValue(), this.reading.getUnit());
+        this.reading.getValue(), this.reading.getUnit(), this.sensorNodeId);
   }
 
   /**

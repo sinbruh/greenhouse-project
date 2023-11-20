@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import no.ntnu.communication.Message;
 
 public class GreenhouseServer {
     public static final int PORT_NUMBER = 1025;
@@ -18,6 +19,15 @@ public class GreenhouseServer {
     public GreenhouseServer(GreenhouseSimulator greenhouseSimulator) {
         this.greenhouseSimulator = greenhouseSimulator;
         this.clients = new ArrayList<>();
+    }
+
+    /**
+     * Initializes and starts the greenhouse.
+     */
+    public void startGreenhouse() {
+        greenhouseSimulator.initialize();
+        greenhouseSimulator.setServer(this);
+        greenhouseSimulator.start();
     }
 
     /**
@@ -69,4 +79,10 @@ public class GreenhouseServer {
     private void stopServer() {
         isTcpServerRunning = false;
     }
+
+    /**
+     * Sends a message to all the clients currently connected to the server.
+     */
+  public void notifyAllClients(Message response) {
+  }
 }
