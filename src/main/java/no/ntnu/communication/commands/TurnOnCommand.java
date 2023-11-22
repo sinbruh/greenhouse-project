@@ -2,6 +2,9 @@ package no.ntnu.communication.commands;
 
 import no.ntnu.communication.Command;
 import no.ntnu.communication.Message;
+import no.ntnu.communication.messages.StateMessage;
+import no.ntnu.greenhouse.Actuator;
+
 
 /**
  * Command class for turning on an Actuator. Typing "on" will
@@ -10,7 +13,9 @@ import no.ntnu.communication.Message;
 public class TurnOnCommand extends Command {
   private String nodeID;
   private String actuatorID;
-  public TurnOnCommand(String nodeID, String actuatorID) {
+  private String actuatorType;
+
+  public TurnOnCommand(String nodeID, String actuatorID, String actuatorType) {
     this.nodeID = nodeID;
     this.actuatorID = actuatorID;
   }
@@ -18,11 +23,13 @@ public class TurnOnCommand extends Command {
 
   @Override
   public Message execute() {
-    return null;
+    Actuator actuator = new Actuator(actuatorID, Integer.parseInt(nodeID));
+    actuator.turnOn();
+    return new StateMessage(nodeID, actuatorID, "on");
   }
 
   @Override
   public String messageAsString() {
-    return null;
+    return "TurnOffCommand: NodeId=" + nodeID + "ActuatorId=" + actuatorID;
   }
 }

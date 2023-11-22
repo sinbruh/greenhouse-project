@@ -14,11 +14,14 @@ public class GreenhouseServer {
     private BufferedReader socketReader;
     private GreenhouseSimulator greenhouseSimulator;
     private boolean isTcpServerRunning;
-    private ArrayList<Socket> clients;
+    private ArrayList<Socket> controlPanels;
+    private ArrayList<Socket> nodes;
 
     public GreenhouseServer(GreenhouseSimulator greenhouseSimulator) {
         this.greenhouseSimulator = greenhouseSimulator;
-        this.clients = new ArrayList<>();
+        this.nodes = new ArrayList<>();
+        this.controlPanels = new ArrayList<>();
+        startGreenhouse();
     }
 
     /**
@@ -35,23 +38,25 @@ public class GreenhouseServer {
      * Some code was reused from previous SmartTV project.
      * @param port The port of the listening socket.
      */
-    public void startServer(int port) {
-        ServerSocket listeningSocket = openListeningSocket(port);
-        System.out.println("Server listening on port " + port);
-        if (listeningSocket != null) {
-            isTcpServerRunning = true;
-            while (isTcpServerRunning) {
-                Socket clientSocket = acceptNextClientConnection(listeningSocket);
-                if (clientSocket != null) {
-                    System.out.println("New client connected from " + clientSocket.getRemoteSocketAddress());
-                    clients.add(clientSocket);
-
-                    ClientHandler clientHandler = new ClientHandler(clientSocket, greenhouseSimulator, this);
-                    clientHandler.start();
-                }
-            }
-        }
-    }
+//    public void startServer(int nodePort, int controlPanelPort) {
+//        ServerSocket nodeSocket = openListeningSocket(nodePort);
+//        ServerSocket controlPanelSocket = openListeningSocket(controlPanelPort);
+//
+//        System.out.println("Server listening for node on port " + nodePort);
+//        if (listeningSocket != null) {
+//            isTcpServerRunning = true;
+//            while (isTcpServerRunning) {
+//                Socket clientSocket = acceptNextClientConnection(listeningSocket);
+//                if (clientSocket != null) {
+//                    System.out.println("New client connected from " + clientSocket.getRemoteSocketAddress());
+//                    clients.add(clientSocket);
+//
+//                    ClientHandler clientHandler = new ClientHandler(clientSocket, greenhouseSimulator, this);
+//                    clientHandler.start();
+//                }
+//            }
+//        }
+//    }
 
     private ServerSocket openListeningSocket(int port) {
         ServerSocket listeningSocket = null;
