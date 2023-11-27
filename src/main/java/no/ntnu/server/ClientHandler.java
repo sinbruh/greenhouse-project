@@ -73,8 +73,9 @@ public class ClientHandler extends Thread {
         Message clientCommand = null;
         try {
             String rawClientRequest = socketReader.readLine();
+            System.out.println("Recieved from client: " + rawClientRequest);
             clientCommand = MessageSerializer.fromString(rawClientRequest);
-            if (clientCommand instanceof Command) {
+            if (!(clientCommand instanceof Command)) {
                 System.err.println("Invalid message recieved");
                 clientCommand = null;
             }

@@ -15,7 +15,7 @@ public class MessageSerializer {
     switch (tokens[0]) {
       //Commands
       case "on" -> message = new TurnOnCommand(tokens[0], tokens[1], tokens[2]);
-      case "off" -> message = new TurnOffCommand(tokens[0], tokens[1]);
+      case "off" -> message = new TurnOffCommand(tokens[0], tokens[1], tokens[2]);
       case "toggle" -> message = new Toggle(tokens[0], tokens[1]);
       case "getState" -> message = new GetStateCommand(tokens[0], tokens[1]);
       case "getSensors" -> message = new GetListOfSensors(tokens[0]);
