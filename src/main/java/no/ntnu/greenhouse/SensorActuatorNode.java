@@ -33,7 +33,10 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   private boolean running;
   private final Random random = new Random();
 
+  //Maps to store actuators and sensors by type.
   private final Map<SensorType, List<Sensor>> sensorsByType = new HashMap<>();
+  private final Map<ActuatorType, List<Actuator>> actuatorsByType = new HashMap<>();
+
 
 
   /**
