@@ -51,7 +51,8 @@ public class ClientHandler extends Thread {
             System.out.println("Recieved from client: " + clientCommand);
 
             try {
-                response = clientCommand.execute();
+                response = clientCommand.execute(simulator);
+                System.out.println("Response: " + response.messageAsString());
             } catch (Exception e) {
                 System.err.println("Could not execute command: " + e.getMessage());
             }
