@@ -9,12 +9,16 @@ import no.ntnu.greenhouse.GreenhouseSimulator;
  * "Toggle" to either turn on or off an Actuator
  */
 public class Toggle extends Command {
+  int nodeID;
+  int actuatorID;
   public Toggle(String nodeID, String actuatorID) {
-    super();
+    this.nodeID = Integer.parseInt(nodeID);
+    this.actuatorID = Integer.parseInt(actuatorID);
   }
 
   @Override
   public Message execute(GreenhouseSimulator simulator) {
+    simulator.getNodes().get(nodeID).getActuators().get(actuatorID).toggle();
     return null;
   }
 
