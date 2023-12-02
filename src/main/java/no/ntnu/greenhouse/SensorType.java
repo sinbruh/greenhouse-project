@@ -1,2 +1,7 @@
-package no.ntnu.greenhouse;public enum SensorType {
+package no.ntnu.greenhouse;
+
+public enum SensorType {
+  HUMIDITY,
+  TEMPERATURE,
+  LIGHT
 }

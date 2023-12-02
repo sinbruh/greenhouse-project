@@ -1,7 +1,9 @@
 package no.ntnu.greenhouse;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,6 +32,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
 
   private boolean running;
   private final Random random = new Random();
+
+  private final Map<SensorType, List<Sensor>> sensorsByType = new HashMap<>();
+
 
   /**
    * Create a sensor/actuator node. Note: the node itself does not check whether the ID is unique.
