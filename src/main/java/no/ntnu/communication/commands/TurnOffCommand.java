@@ -4,6 +4,7 @@ import no.ntnu.communication.Command;
 import no.ntnu.communication.Message;
 import no.ntnu.communication.messages.StateMessage;
 import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.GreenhouseSimulator;
 
 /**
  * Command class for turning off an Actuator. User types "Off"
@@ -21,7 +22,7 @@ public class TurnOffCommand extends Command {
   }
 
   @Override
-  public Message execute() {
+  public Message execute(GreenhouseSimulator simulator) {
     Actuator actuator = new Actuator(actuatorID, Integer.parseInt(nodeID));
     actuator.turnOff();
     return new StateMessage(nodeID, actuatorID, "off");

@@ -4,6 +4,7 @@ import no.ntnu.communication.Command;
 import no.ntnu.communication.Message;
 import no.ntnu.communication.messages.StateMessage;
 import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.GreenhouseSimulator;
 
 
 /**
@@ -22,7 +23,7 @@ public class TurnOnCommand extends Command {
 
 
   @Override
-  public Message execute() {
+  public Message execute(GreenhouseSimulator simulator) {
     Actuator actuator = new Actuator(actuatorID, Integer.parseInt(nodeID));
     actuator.turnOn();
     return new StateMessage(nodeID, actuatorID, "on");
