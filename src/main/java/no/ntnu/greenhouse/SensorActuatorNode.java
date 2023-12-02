@@ -1,5 +1,6 @@
 package no.ntnu.greenhouse;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,6 +82,27 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
 
     for (int i = 0; i < n; ++i) {
       sensors.add(template.createClone());
+    }
+  }
+
+  /**
+   * This method lets you add sensors with specified types.
+   *
+   * @param types Types of sensors.
+   * @param n The number of sensors to add to the node.
+   */
+  public void addSensors2(List<SensorType> types, int n) {
+    if (types == null || types.isEmpty()) {
+      throw new IllegalArgumentException("Sensor types list is missing");
+    }
+    for (SensorType type : types) {
+      for (int i = 0; i < n; ++i) {
+        Sensor sensor = DeviceFactory.createSensorBasedOnType(type);
+        sensors.add(sensor);
+
+        // Add sensor to the map based on its type
+        sensorsByType.computeIfAbsent(type, k -> new ArrayList<>()).add(sensor);
+      }
     }
   }
 
