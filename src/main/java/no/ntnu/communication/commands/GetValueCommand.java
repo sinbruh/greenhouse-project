@@ -4,6 +4,7 @@ import no.ntnu.communication.Message;
 import no.ntnu.greenhouse.Sensor;
 import no.ntnu.greenhouse.SensorActuatorNode;
 
+
 public class GetValueCommand extends Message {
   private String nodeID;
   private String sensorID;
@@ -19,7 +20,7 @@ public class GetValueCommand extends Message {
   }
 
   public void execute(SensorActuatorNode node) {
-    Sensor sensor = node.getSensor(Integer.parseInt(this.sensorID));
+    Sensor sensor = node.getSensor(this.sensorID);;
     System.out.println("Sensor value: " + sensor.getReading().getValue());
   }
 }
