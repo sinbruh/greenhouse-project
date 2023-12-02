@@ -3,6 +3,7 @@ package no.ntnu.controlpanel;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import no.ntnu.communication.commands.GetListOfNodes;
 
 public class RealCommunicationChannel implements CommunicationChannel {
   private Socket socket;
@@ -20,7 +21,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
   }
 
   public void testSend() {
-    socketWriter.println("test");
+    socketWriter.println(new GetListOfNodes().messageAsString());
   }
 
   @Override

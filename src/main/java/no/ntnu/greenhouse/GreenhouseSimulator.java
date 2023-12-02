@@ -118,4 +118,8 @@ public class GreenhouseSimulator {
   public void setServer(GreenhouseServer greenhouseServer) {
     this.server = greenhouseServer;
   }
+
+  public Map<Integer, SensorActuatorNode> getNodes() {
+    return nodes;
+  }
 }
