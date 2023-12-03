@@ -91,6 +91,24 @@ public class DeviceFactory {
   }
 
   /**
+   * Creates a new sensor based on specified sensor type.
+   *
+   * @param type
+   * @return
+   */
+  public static Sensor createSensorBasedOnType(SensorType type) {
+    switch (type) {
+      case TEMPERATURE:
+        return createTemperatureSensor();
+      case HUMIDITY:
+        return createHumiditySensor();
+      // Add more cases for other sensor types if needed
+      default:
+        throw new IllegalArgumentException("Unsupported sensor type: " + type);
+    }
+  }
+
+  /**
    * Create a typical window-actuator.
    *
    * @param nodeId ID of the node to which this actuator will be connected
