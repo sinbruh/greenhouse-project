@@ -12,6 +12,7 @@ import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.DeviceFactory;
 import no.ntnu.greenhouse.Sensor;
 import no.ntnu.greenhouse.SensorReading;
+import no.ntnu.tools.Logger;
 
 public class RealCommunicationChannel extends Thread implements CommunicationChannel {
   private Socket socket;
@@ -32,7 +33,20 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   public void initNodes(String[] tokens) {
     for (int i = 1; i < tokens.length; i++) {
       System.out.println("Adding node " + tokens[i]);
-      logic.onNodeAdded(new SensorActuatorNodeInfo(Integer.parseInt(tokens[i])));
+
+
+      String[] nodeTokens = tokens[i].split(":");
+      int nodeId = Integer.parseInt(nodeTokens[0]);
+      SensorActuatorNodeInfo nodeInfo = new SensorActuatorNodeInfo(nodeId);
+      if (nodeTokens.length > 1) {
+        for (int j = 1; j < nodeTokens.length; j++) {
+          String[] actuatorTokens = nodeTokens[j].split("/");
+          nodeInfo.addActuator(new Actuator(Integer.parseInt(actuatorTokens[0]), actuatorTokens[1], nodeId));
+          Logger.info("Added actuator " + actuatorTokens[0] + " to node " + nodeId);
+        }
+      }
+
+      logic.onNodeAdded(nodeInfo);
     }
   }
 

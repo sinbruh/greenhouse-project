@@ -128,9 +128,11 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   public void onSensorData(int nodeId, List<SensorReading> sensors) {
     Logger.info("Sensor data from node " + nodeId);
     SensorPane sensorPane = sensorPanes.get(nodeId);
+
     if (sensorPane != null) {
       sensorPane.update(sensors);
     } else {
+      sensorPanes.put(nodeId, new SensorPane(sensors));
       Logger.error("No sensor section for node " + nodeId);
     }
   }
@@ -186,7 +188,6 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     if (nodeTab == null) {
       nodeInfos.put(nodeInfo.getId(), nodeInfo);
       nodeTabPane.getTabs().add(createNodeTab(nodeInfo));
-      sensorPanes.put(nodeInfo.getId(), createEmptySensorPane());
     } else {
       Logger.info("Duplicate node spawned, ignore it");
     }
