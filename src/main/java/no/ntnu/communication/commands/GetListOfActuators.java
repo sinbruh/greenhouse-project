@@ -6,7 +6,6 @@ import no.ntnu.communication.messages.ActuatorListMessage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.greenhouse.SensorActuatorNode;
-import no.ntnu.messages.ErrorMessage;
 
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public class GetListOfActuators extends Command {
       int size = actuators.size();
       return new ActuatorListMessage("NumberOfActuators:" + size, nodeID);
     } else {
-      return new ErrorMessage("Node not found");
+      return new ActuatorListMessage("NumberOfActuators:0", nodeID); //just a placement code
     }
   }
 
