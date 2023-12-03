@@ -24,7 +24,7 @@ public class ListOfNodesMessage extends Message {
         builder.append(":");
         builder.append(actuator.getId());
         builder.append("/");
-
+        builder.append(actuator.getType());
       }
     }
     return builder.toString();

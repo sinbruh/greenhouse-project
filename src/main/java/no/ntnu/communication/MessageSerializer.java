@@ -27,7 +27,7 @@ public class MessageSerializer {
       case "state" -> message = new StateMessage(tokens[0], tokens[1], tokens[2]);
       case "sensors" -> message = new SensorListMessage(tokens[0], tokens[1]);
       case "actuators" -> message = new ActuatorListMessage(tokens[0], tokens[1]);
-      case "nodes" -> message = new ListOfNodesMessage(tokens[0], tokens[1]);
+//      case "nodes" -> message = new ListOfNodesMessage(tokens[0]);
     }
 
     return message;
