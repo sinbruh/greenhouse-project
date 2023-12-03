@@ -1,7 +1,6 @@
 package no.ntnu.server;
 
 import no.ntnu.greenhouse.GreenhouseSimulator;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -9,6 +8,13 @@ import java.net.Socket;
 import java.util.ArrayList;
 import no.ntnu.communication.Message;
 
+/**
+ *
+ * The GreenhouseServer class manages the communication between the GreenhouseSimulator,
+ * control panels, and nodes. It provides functionality to start and stop the greenhouse,
+ * as well as to initiate and manage the TCP server for handling client connections.
+ *
+ */
 public class GreenhouseServer {
     public static final int NODE_PORT = 1026;
     public static final int CONTROL_PANEL_PORT = 1025;
@@ -58,6 +64,12 @@ public class GreenhouseServer {
         }
     }
 
+    /**
+     * Opens a ServerSocket on specified port to listen for incoming client connection.
+     *
+     * @param port port The port on which the ServerSocket will listen for incoming connections.
+     * @return A ServerSocket instance if successfully created, or null if an exception occurs.
+     */
     private ServerSocket openListeningSocket(int port) {
         ServerSocket listeningSocket = null;
         try {
@@ -68,6 +80,13 @@ public class GreenhouseServer {
         return listeningSocket;
     }
 
+    /**
+     * Accepts the next incoming client connection on the provided ServerSocket.
+     * If the acceptance of the connection fails, an error message is printed to the standard error stream.
+     *
+     * @param listeningSocket The ServerSocket on which to accept the next client connection.
+     * @return A Socket representing the accepted client connection if successful, or null if an exception occurs.
+     */
     private Socket acceptNextClientConnection(ServerSocket listeningSocket) {
         Socket clientSocket = null;
         try {
