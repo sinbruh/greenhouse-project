@@ -76,8 +76,6 @@ Commands: "commandType|nodeID|actuatorID/sensorID|"
 * getListOfNodes - returns a list of all nodes. type: "getNodes"
 
 Messages: "messageType|messageValue|nodeID|sensorID"
-* temperature - the temperature of a sensor node in Celsius. type: "temp"
-* humidity - the humidity of a sensor node. type: "humid"
 * state - the state of an actuator, can be on or off. type: "state"
 * listOfSensors - returns a list of sensor. The list will be in the form of a string and needs to be parsed.
     The separator used in the string to separate sensors is a colon ":". type: "sensors"
@@ -89,6 +87,9 @@ Messages: "messageType|messageValue|nodeID|sensorID"
     the control panel that sent the command. type: "so"
 * error - when a command is sent to a sensor-actuator node, but an error occurs, an error message will be sent to
     the control panel that sent the command. type: "error"
+* SensorReadingMessage - a message that contains a list of sensor readings on a node. The list will be formatted like
+    this "type:value:unit/type:value:unit". ":" separates the values of a sensor, "/" separates
+    sensors. the sensor type can be humidity or temperature (currently). type: "sensorReading"
 
 ### Error messages
 

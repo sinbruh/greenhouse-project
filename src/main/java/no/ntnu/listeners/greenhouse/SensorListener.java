@@ -15,5 +15,5 @@ public interface SensorListener {
    *
    * @param sensors A list of sensors having new values (readings)
    */
-  void sensorsUpdated(List<Sensor> sensors);
+  void sensorsUpdated(String nodeID, List<Sensor> sensors);
 }

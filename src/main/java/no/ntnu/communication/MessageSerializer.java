@@ -22,9 +22,8 @@ public class MessageSerializer {
       case "getActuators" -> message = new GetListOfActuators(tokens[0]);
       case "getNodes" -> message = new GetListOfNodes();
       case "getValue" -> message = new GetValueCommand(tokens[0], tokens[1]);
+      case "ready" -> message = new ReadyCommand();
       //Messages
-      case "temp" -> message = new TemperatureMessage(tokens[0], tokens[1], tokens[2]);
-      case "humid" -> message = new HumidityMessage(tokens[0], tokens[1], tokens[2]);
       case "state" -> message = new StateMessage(tokens[0], tokens[1], tokens[2]);
       case "sensors" -> message = new SensorListMessage(tokens[0], tokens[1]);
       case "actuators" -> message = new ActuatorListMessage(tokens[0], tokens[1]);

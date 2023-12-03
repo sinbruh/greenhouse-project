@@ -66,7 +66,7 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
 
 
   @Override
-  public void sensorsUpdated(List<Sensor> sensors) {
+  public void sensorsUpdated(String nodeID, List<Sensor> sensors) {
     if (sensorPane != null) {
       sensorPane.update(sensors);
     }
