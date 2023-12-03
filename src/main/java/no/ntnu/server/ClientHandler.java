@@ -19,6 +19,10 @@ import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
 
+/**
+ * The ClientHandler class is responsible for managing the communication with a single client.
+ * It reads client requests, executes corresponding commands, and sends responses back to the client.
+ */
 public class ClientHandler extends Thread implements NodeStateListener, NodeChangeListener,
     SensorListener {
     private BufferedReader socketReader;
@@ -27,12 +31,24 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
     private PrintWriter socketWriter;
     private boolean readyToReceive; //Is the control panel ready to receive readings or not
 
+    /**
+     * Constructs a ClientHandler with the specified clientSocket, GreenhouseSimulator, and GreenhouseServer.
+     *
+     * @param clientSocket The Socket representing the connection to the client.
+     * @param simulator The GreenhouseSimulator associated with the server.
+     * @param server The GreenhouseServer managing the overall server functionality.
+     */
     public ClientHandler(Socket clientSocket, GreenhouseSimulator simulator, GreenhouseServer server) {
         this.clientSocket = clientSocket;
         this.simulator = simulator;
         readyToReceive = true;
     }
 
+    /**
+     * Initializes the input stream for the client socket.
+     *
+     * @return true if the stream initialization is successful, false otherwise.
+     */
     private boolean initializeStreams() {
         boolean success = true;
         try {
@@ -45,6 +61,10 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
         return success;
     }
 
+    /**
+     * Executes the main logic of the ClientHandler thread. Reads client requests,
+     * processes corresponding commands, and sends responses back to the client.
+     */
     public void run() {
         if (!initializeStreams()) {
             return;
@@ -77,6 +97,11 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
         } while (response != null);
     }
 
+    /**
+     * Reads and deserializes a client request from the input stream.
+     *
+     * @return The Command object representing the client request, or null if an exception occurs.
+     */
     private Command readClientRequest() {
         Message clientCommand = null;
         try {
@@ -97,7 +122,12 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
         }
         return (Command) clientCommand;
     }
- 
+
+    /**
+     * Sends a response to the client by serializing and writing it to the output stream.
+     *
+     * @param response The Message object to be sent as a response to the client.
+     */
     private void sendResponseToClient(Message response) {
             socketWriter.println(MessageSerializer.toString(response));
             System.out.println("Sent response to " + clientSocket.getRemoteSocketAddress());
