@@ -5,9 +5,9 @@ import no.ntnu.communication.Message;
 public class ActuatorListMessage extends Message {
   Integer[] actuatorIDs;
 
-  public ActuatorListMessage(Integer[] actuatorIDs){
+  public ActuatorListMessage(String actuatorIDs){
     super();
-    this.actuatorIDs = actuatorIDs;
+    this.actuatorIDs = new Integer[actuatorIDs.length()];
   }
 
   @Override

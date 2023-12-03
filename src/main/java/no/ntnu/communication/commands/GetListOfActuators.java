@@ -31,19 +31,25 @@ public class GetListOfActuators extends Command {
    * @param simulator GreenhouseSimulator instance.
    * @return Message containing information about the number of actuators in the node.
    */
+//  @Override
+//  public Message execute(GreenhouseSimulator simulator) {
+//    Map<Integer, SensorActuatorNode> nodes = simulator.getNodes();
+//    if (nodes.containsKey(Integer.parseInt(nodeID))) {
+//      ActuatorCollection actuators = nodes.get(Integer.parseInt(nodeID)).getActuators();
+//      int size = actuators.size();
+//      return new ActuatorListMessage("NumberOfActuators:" + size, nodeID);
+//    } else {
+//      return new ActuatorListMessage("NumberOfActuators:0", nodeID); //just a placement code
+//    }
+//  }
+
+
   @Override
   public Message execute(GreenhouseSimulator simulator) {
-    Map<Integer, SensorActuatorNode> nodes = simulator.getNodes();
-    if (nodes.containsKey(Integer.parseInt(nodeID))) {
-      ActuatorCollection actuators = nodes.get(Integer.parseInt(nodeID)).getActuators();
-      int size = actuators.size();
-      return new ActuatorListMessage("NumberOfActuators:" + size, nodeID);
-    } else {
-      return new ActuatorListMessage("NumberOfActuators:0", nodeID); //just a placement code
-    }
+    return null;
   }
 
-    /**
+  /**
      * Returns the message as a string.
      * @return the message as a string.
      */
