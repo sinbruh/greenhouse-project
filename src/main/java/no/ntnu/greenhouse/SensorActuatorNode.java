@@ -246,7 +246,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
 
   private void notifySensorChanges() {
     for (SensorListener listener : sensorListeners) {
-      listener.sensorsUpdated(sensors);
+      listener.sensorsUpdated(Integer.toString(id), sensors);
     }
   }
 

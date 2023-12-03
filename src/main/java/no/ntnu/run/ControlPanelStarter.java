@@ -41,6 +41,7 @@ public class ControlPanelStarter {
   private void start() {
     ControlPanelLogic logic = new ControlPanelLogic();
     CommunicationChannel channel = initiateCommunication(logic, fake);
+    channel.start();
     ControlPanelApplication.startApp(logic, channel);
     // This code is reached only after the GUI-window is closed
     Logger.info("Exiting the control panel application");
@@ -63,7 +64,6 @@ public class ControlPanelStarter {
       Socket socket = new Socket("localhost", GreenhouseServer.CONTROL_PANEL_PORT);
       communicationChannel.setSocket(socket);
       logic.setCommunicationChannel(communicationChannel);
-      communicationChannel.testSend();
     } catch (Exception e) {
       Logger.error("Failed to start socket communication: " + e.getMessage());
       System.exit(1);

@@ -65,15 +65,9 @@ public class GreenhouseSimulator {
   private void initiateCommunication() {
     if (fake) {
       initiateFakePeriodicSwitches();
-    } else {
-      initiateRealCommunication();
     }
   }
 
-
-  private void initiateRealCommunication() {
-    // TODO - set up TCP communication
-  }
 
   private void initiateFakePeriodicSwitches() {
     periodicSwitches.add(new PeriodicSwitch("Window DJ", nodes.get(1), 2, 20000));
@@ -90,13 +84,14 @@ public class GreenhouseSimulator {
     }
   }
 
+  /**
+   * Stop the communication.
+   */
   private void stopCommunication() {
     if (fake) {
       for (PeriodicSwitch periodicSwitch : periodicSwitches) {
         periodicSwitch.stop();
       }
-    } else {
-      // TODO - here you stop the TCP/UDP communication
     }
   }
 
@@ -113,12 +108,16 @@ public class GreenhouseSimulator {
 
   /**
    * Sets the server of this greenhouse.
-   * @param greenhouseServer
+   * @param greenhouseServer the server of this greenhouse
    */
   public void setServer(GreenhouseServer greenhouseServer) {
     this.server = greenhouseServer;
   }
 
+  /**
+   * Gets the server of this greenhouse.
+   * @return the server of this greenhouse
+   */
   public Map<Integer, SensorActuatorNode> getNodes() {
     return nodes;
   }
