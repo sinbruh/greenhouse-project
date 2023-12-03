@@ -6,16 +6,10 @@ public class ActuatorListMessage extends Message {
   String listOfMessages;
   String actuatorIDs;
 
-<<<<<<< Updated upstream
-  public ActuatorListMessage(String actuatorIDs){
-    super();
-    this.actuatorIDs = new Integer[actuatorIDs.length()];
-=======
   public ActuatorListMessage(String listOfMessages, String actuatorIDs){
     super();
     this.listOfMessages = listOfMessages;
     this.actuatorIDs = actuatorIDs;
->>>>>>> Stashed changes
   }
 
   @Override
