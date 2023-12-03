@@ -7,13 +7,17 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
+import no.ntnu.controlpanel.RealCommunicationChannel;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.SensorReading;
@@ -78,14 +82,23 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     }
   }
 
-  private static Label createEmptyContent() {
+  private static Pane createEmptyContent() {
     Label l = new Label("Waiting for node data...");
     l.setAlignment(Pos.CENTER);
-    return l;
+
+    Button requestNodesButton = new Button("Request nodes");
+    requestNodesButton.setOnAction(event -> channel.sendGetNodesCommand());
+
+    VBox vBox = new VBox(l, requestNodesButton);
+    vBox.setAlignment(Pos.CENTER);
+    vBox.setSpacing(10);
+
+    return vBox;
   }
 
   @Override
   public void onNodeAdded(SensorActuatorNodeInfo nodeInfo) {
+    System.out.println("Node added: " + nodeInfo.getId());
     Platform.runLater(() -> addNodeTab(nodeInfo));
   }
 
@@ -173,6 +186,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     if (nodeTab == null) {
       nodeInfos.put(nodeInfo.getId(), nodeInfo);
       nodeTabPane.getTabs().add(createNodeTab(nodeInfo));
+      sensorPanes.put(nodeInfo.getId(), createEmptySensorPane());
     } else {
       Logger.info("Duplicate node spawned, ignore it");
     }

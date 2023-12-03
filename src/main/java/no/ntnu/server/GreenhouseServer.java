@@ -12,15 +12,12 @@ import no.ntnu.communication.Message;
 public class GreenhouseServer {
     public static final int NODE_PORT = 1026;
     public static final int CONTROL_PANEL_PORT = 1025;
-    private BufferedReader socketReader;
     private GreenhouseSimulator greenhouseSimulator;
     private boolean isTcpServerRunning;
     private ArrayList<Socket> controlPanels;
-    private ArrayList<Socket> nodes;
 
     public GreenhouseServer(GreenhouseSimulator greenhouseSimulator) {
         this.greenhouseSimulator = greenhouseSimulator;
-        this.nodes = new ArrayList<>();
         this.controlPanels = new ArrayList<>();
         startGreenhouse();
     }
@@ -54,6 +51,7 @@ public class GreenhouseServer {
                     controlPanels.add(clientSocket);
 
                     ClientHandler clientHandler = new ClientHandler(clientSocket, greenhouseSimulator, this);
+                    greenhouseSimulator.getNodes().values().forEach(node -> node.addSensorListener(clientHandler));
                     clientHandler.start();
                 }
             }
