@@ -4,6 +4,9 @@ import no.ntnu.communication.Command;
 import no.ntnu.communication.Message;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 
+/**
+ * Not yet implemented
+ */
 public class ReadyCommand extends Command {
   @Override
   public Message execute(GreenhouseSimulator simulator) {

@@ -14,12 +14,22 @@ public class Toggle extends Command {
   private String nodeID;
   private String actuatorID;
 
-
+  /**
+   * Constructor for the Toggle class.
+   * @param nodeID ID of given node
+   * @param actuatorID ID of given actuator
+   */
   public Toggle(String nodeID, String actuatorID) {
     this.nodeID = nodeID;
     this.actuatorID = actuatorID;
   }
 
+  /**
+   * Executes the command to toggle an Actuator
+   * and returns the state of the Actuator.
+   * @param simulator
+   * @return
+   */
   @Override
   public Message execute(GreenhouseSimulator simulator) {
     Actuator actuator = new Actuator(actuatorID, Integer.parseInt(nodeID));
@@ -27,6 +37,10 @@ public class Toggle extends Command {
     return new StateMessage(nodeID, actuatorID, actuator.isOn() ? "on" : "off");
   }
 
+  /**
+   * Returns the message as a string.
+   * @return the message as a string.
+   */
   @Override
   public String messageAsString() {
     return "ToggleCommand: NodeId=" + nodeID + ", ActuatorID=" + actuatorID;
