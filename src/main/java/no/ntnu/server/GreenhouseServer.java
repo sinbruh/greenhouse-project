@@ -56,7 +56,7 @@ public class GreenhouseServer {
                     System.out.println("New client connected from " + clientSocket.getRemoteSocketAddress());
                     controlPanels.add(clientSocket);
 
-                    ClientHandler clientHandler = new ClientHandler(clientSocket, greenhouseSimulator, this);
+                    ClientHandler clientHandler = new ClientHandler(clientSocket, greenhouseSimulator);
                     greenhouseSimulator.getNodes().values().forEach(node -> node.addSensorListener(clientHandler));
                     clientHandler.start();
                 }

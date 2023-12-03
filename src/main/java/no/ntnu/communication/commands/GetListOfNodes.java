@@ -8,16 +8,24 @@ import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.greenhouse.SensorActuatorNode;
 
 /**
- * Gives the user a list of the available Nodes, does not
- * require any type of ID
+ * Command to get a list of all nodes in the system. The list is sent as a ListOfNodesMessage.
  */
 public class GetListOfNodes extends Command {
 
+  /**
+   * Execute the command. Returns a ListOfNodesMessage containing a list of all nodes in the system.
+   * @param simulator GreenhouseSimulator instance
+   * @return ListOfNodesMessage containing a
+   */
   @Override
   public Message execute(GreenhouseSimulator simulator) {
     return new ListOfNodesMessage(simulator.getNodes().keySet().toArray(new Integer[0]));
   }
 
+  /**
+   * Returns the message as a string.
+   * @return
+   */
   @Override
   public String messageAsString() {
     return "getNodes";

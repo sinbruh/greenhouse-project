@@ -36,9 +36,8 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
      *
      * @param clientSocket The Socket representing the connection to the client.
      * @param simulator The GreenhouseSimulator associated with the server.
-     * @param server The GreenhouseServer managing the overall server functionality.
      */
-    public ClientHandler(Socket clientSocket, GreenhouseSimulator simulator, GreenhouseServer server) {
+    public ClientHandler(Socket clientSocket, GreenhouseSimulator simulator) {
         this.clientSocket = clientSocket;
         this.simulator = simulator;
         readyToReceive = true;

@@ -15,12 +15,22 @@ public class TurnOffCommand extends Command {
   private String actuatorID;
   private String actuatorType;
 
-
+  /**
+   * Constructor for the TurnOffCommand class.
+   * @param nodeID ID of given node
+   * @param actuatorID ID of given actuator
+   * @param actuatorType type of actuator
+   */
   public TurnOffCommand(String nodeID, String actuatorID, String actuatorType) {
     this.nodeID = nodeID;
     this.actuatorID = actuatorID;
   }
 
+  /**
+   * Executes the command to turn off an Actuator
+   * @param simulator GreenhouseSimulator instance.
+   * @return turn off message.
+   */
   @Override
   public Message execute(GreenhouseSimulator simulator) {
     Actuator actuator = new Actuator(actuatorID, Integer.parseInt(nodeID));
@@ -28,6 +38,10 @@ public class TurnOffCommand extends Command {
     return new StateMessage(nodeID, actuatorID, "off");
   }
 
+  /**
+   * Returns the message as a string.
+   * @return the message as a string.
+   */
   @Override
   public String messageAsString() {
     return "TurnOffCommand: NodeId=" + nodeID + ", ActuatorID=" + actuatorID;
