@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.prefs.NodeChangeEvent;
 import java.util.prefs.NodeChangeListener;
-import no.ntnu.communication.commands.ReadyCommand;
+import no.ntnu.communication.commands.GetListOfNodes;
 import no.ntnu.communication.messages.SensorReadingMessage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.communication.Message;
@@ -40,7 +40,7 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
     public ClientHandler(Socket clientSocket, GreenhouseSimulator simulator) {
         this.clientSocket = clientSocket;
         this.simulator = simulator;
-        readyToReceive = true;
+        readyToReceive = false;
     }
 
     /**
@@ -81,6 +81,10 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
 
             System.out.println("Recieved from client: " + clientCommand);
 
+            if (clientCommand instanceof GetListOfNodes) {
+                readyToReceive = true;
+            }
+
             try {
                 response = clientCommand.execute(simulator);
                 System.out.println("Response: " + response.messageAsString());
@@ -107,10 +111,6 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
             String rawClientRequest = socketReader.readLine();
             System.out.println("Recieved from client: " + rawClientRequest);
             clientCommand = MessageSerializer.fromString(rawClientRequest);
-
-            if (clientCommand instanceof ReadyCommand) {
-                readyToReceive = true;
-            }
 
             if (!(clientCommand instanceof Command)) {
                 System.err.println("Invalid message recieved");
