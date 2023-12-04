@@ -3,12 +3,17 @@ package no.ntnu.communication.messages;
 import no.ntnu.communication.Message;
 
 public class StateMessage extends Message {
-  public StateMessage(String value, String nodeID, String actuatorID) {
-    super();
+  String nodeID;
+  String actuatorID;
+  String value;
+  public StateMessage(String nodeID, String actuatorID, String value) {
+    this.nodeID = nodeID;
+    this.actuatorID = actuatorID;
+    this.value = value;
   }
 
   @Override
   public String messageAsString() {
-    return null;
+    return "state|" + nodeID + "|" + actuatorID + "|" + value;
   }
 }

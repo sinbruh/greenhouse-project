@@ -5,7 +5,9 @@ import java.util.Map;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
@@ -14,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
+import no.ntnu.listeners.common.ActuatorListener;
 
 /**
  * A section of the GUI representing a list of actuators. Can be used both on the sensor/actuator
@@ -45,24 +48,35 @@ public class ActuatorPane extends TitledPane {
   }
 
   private Node createActuatorGui(Actuator actuator) {
-    HBox actuatorGui = new HBox(createActuatorLabel(actuator), createActuatorCheckbox(actuator));
+    HBox actuatorGui = new HBox(createActuatorLabel(actuator), createActuatorButton(actuator));
+    actuatorGui.setAlignment(Pos.CENTER_LEFT);
     actuatorGui.setSpacing(5);
     return actuatorGui;
   }
 
-  private CheckBox createActuatorCheckbox(Actuator actuator) {
-    CheckBox checkbox = new CheckBox();
+  private Button createActuatorButton(Actuator actuator) {
+    Button button = new Button();
+    button.setText("Toggle");
+
     SimpleBooleanProperty isSelected = new SimpleBooleanProperty(actuator.isOn());
     actuatorActive.put(actuator, isSelected);
-    checkbox.selectedProperty().bindBidirectional(isSelected);
-    checkbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue != null && newValue) {
-        actuator.turnOn();
-      } else {
-        actuator.turnOff();
-      }
-    });
-    return checkbox;
+    button.setOnAction((actionEvent) -> {
+          actuator.toggle();
+          isSelected.set(actuator.isOn());
+        });
+    return button;
+  }
+
+  public void addActuatorListener(ActuatorListener actuatorListener) {
+    actuatorActive.forEach((actuator, isSelected) ->
+        isSelected.addListener((observable, oldValue, newValue) -> {
+          if (newValue != null && newValue) {
+            actuatorListener.actuatorUpdated(actuator.getNodeId(), actuator);
+          } else {
+            actuatorListener.actuatorUpdated(actuator.getNodeId(), actuator);
+          }
+        })
+    );
   }
 
   private Label createActuatorLabel(Actuator actuator) {

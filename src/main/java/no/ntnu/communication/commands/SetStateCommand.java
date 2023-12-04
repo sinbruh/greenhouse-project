@@ -14,6 +14,7 @@ public class SetStateCommand extends Command {
     public SetStateCommand(String nodeID, String actuatorID, String value) {
         this.nodeID = nodeID;
         this.actuatorID = actuatorID;
+        this.value = value;
     }
 
     @Override
@@ -24,7 +25,7 @@ public class SetStateCommand extends Command {
         } else if (value.equals("off")){
             actuator.turnOff();
         } else {
-            return new ErrorMessage("error");
+            return new ErrorMessage("error: invalid value in setState command");
         }
         return new StateMessage(nodeID, actuatorID, actuator.isOn() ? "on" : "off");
     }

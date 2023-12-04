@@ -27,11 +27,8 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   }
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-    if (isOn) {
-      socketWriter.println("on/" + nodeId + "|" + actuatorId + "|");
-    } else {
-      socketWriter.println("off/" + nodeId + "|" + actuatorId + "|");
-    }
+    Logger.info("Sent: " + "setState|" + nodeId + "|" + actuatorId + "|" + (isOn ? "on" : "off"));
+    socketWriter.println("setState|" + nodeId + "|" + actuatorId + "|" + (isOn ? "on" : "off"));
   }
 
   /**
@@ -76,16 +73,26 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     while (running) {
       String response = readResponse();
       String[] tokens = response.split("\\|");
-      System.out.println("Received message: " + response);
+      Logger.info("Received message: " + response);
 
       switch (tokens[0]) {
-        case "sensorReading" : logic.onSensorData(Integer.parseInt(tokens[1]), parseSensorReading(tokens[2]));
+        case "sensorReading":
+          logic.onSensorData(Integer.parseInt(tokens[1]), parseSensorReading(tokens[2]));
           break;
-        case "nodes" : initNodes(tokens);
+        case "nodes":
+          initNodes(tokens);
+          break;
+        case "state":
+          parseStateMessage(tokens[1], tokens[2], tokens[3]);
+          break;
       }
-
-      running = readResponse() != null;
+      running = !(response == null);
     }
+  }
+
+  public void parseStateMessage(String nodeID, String actuatorID, String state) {
+    boolean stateBool = state.equals("on");
+    logic.onActuatorStateChanged(Integer.parseInt(nodeID), Integer.parseInt(actuatorID), stateBool);
   }
 
   /**

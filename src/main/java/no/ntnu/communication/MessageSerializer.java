@@ -20,7 +20,7 @@ public class MessageSerializer {
     String[] tokens = rawClientRequest.split("\\|");
     switch (tokens[0]) {
       //Commands
-      case "setState" -> message = new SetStateCommand(tokens[0], tokens[1], tokens[2]);
+      case "setState" -> message = new SetStateCommand(tokens[1], tokens[2], tokens[3]);
       case "getState" -> message = new GetStateCommand(tokens[0], tokens[1]);
       case "getSensors" -> message = new GetListOfSensors(tokens[0]);
       case "getActuators" -> message = new GetListOfActuators(tokens[0]);

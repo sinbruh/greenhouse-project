@@ -23,6 +23,7 @@ import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.gui.common.ActuatorPane;
 import no.ntnu.gui.common.SensorPane;
+import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.controlpanel.GreenhouseEventListener;
 import no.ntnu.tools.Logger;
@@ -31,7 +32,7 @@ import no.ntnu.tools.Logger;
  * Run a control panel with a graphical user interface (GUI), with JavaFX.
  */
 public class ControlPanelApplication extends Application implements GreenhouseEventListener,
-    CommunicationChannelListener {
+    CommunicationChannelListener, ActuatorListener {
   private static ControlPanelLogic logic;
   private static final int WIDTH = 500;
   private static final int HEIGHT = 400;
@@ -198,6 +199,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     SensorPane sensorPane = createEmptySensorPane();
     sensorPanes.put(nodeInfo.getId(), sensorPane);
     ActuatorPane actuatorPane = new ActuatorPane(nodeInfo.getActuators());
+    actuatorPane.addActuatorListener(this);
     actuatorPanes.put(nodeInfo.getId(), actuatorPane);
     tab.setContent(new VBox(sensorPane, actuatorPane));
     nodeTabs.put(nodeInfo.getId(), tab);
@@ -212,5 +214,10 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   public void onCommunicationChannelClosed() {
     Logger.info("Communication closed, closing the GUI");
     Platform.runLater(Platform::exit);
+  }
+
+  @Override
+  public void actuatorUpdated(int nodeId, Actuator actuator) {
+    channel.sendActuatorChange(nodeId, actuator.getId(), actuator.isOn());
   }
 }
