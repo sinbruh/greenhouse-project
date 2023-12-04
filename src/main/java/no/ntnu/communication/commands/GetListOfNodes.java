@@ -19,7 +19,7 @@ public class GetListOfNodes extends Command {
    */
   @Override
   public Message execute(GreenhouseSimulator simulator) {
-    return new ListOfNodesMessage(simulator.getNodes().keySet().toArray(new Integer[0]));
+    return new ListOfNodesMessage(simulator.getNodes().values());
   }
 
   /**

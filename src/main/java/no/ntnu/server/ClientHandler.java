@@ -152,6 +152,11 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
 
     }
 
+    /**
+     * Called when a sensor has new values (readings).
+     * @param nodeID
+     * @param sensors A list of sensors having new values (readings)
+     */
     @Override
     public void sensorsUpdated(String nodeID, List<Sensor> sensors) {
         if (readyToReceive) {
