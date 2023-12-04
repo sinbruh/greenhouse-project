@@ -27,7 +27,11 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   }
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-    //TODO implement
+    if (isOn) {
+      socketWriter.println("on/" + nodeId + "|" + actuatorId + "|");
+    } else {
+      socketWriter.println("off/" + nodeId + "|" + actuatorId + "|");
+    }
   }
 
   public void initNodes(String[] tokens) {

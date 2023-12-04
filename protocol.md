@@ -18,59 +18,58 @@ distributed application.
 
 ## The underlying transport protocol
 
-TODO - what transport-layer protocol do you use? TCP? UDP? What port number(s)? Why did you 
-choose this transport layer protocol?
-
-The project uses TCP for handling communication. The port number of the TCP server 1025.
+The project uses TCP for handling communication. The port number of the TCP server 1025. We chose TCP because it is
+reliable and connection oriented. We want to make sure that all the messages are received and that the messages are
+received in the correct order. We also want to make sure that the messages are received by the correct client. TCP
+handles all of this for us.
 
 ## The architecture
-The architecture consists of a central server that connects to multiple nodes and control panels. The server will also
-talk to the greenhouse simulator, but all the networking is done on the server not the greenhouse simulator.
+
+The architecture consists of a central server that connects to multiple control panels. The server will also
+talk to the greenhouse simulator, but all the networking is done on the server not the greenhouse simulator. The
+greenhouse simulator is where all the sensor and actuator nodes are located. 
 
 [Server Architecture](images/GreenhouseServerArchitecture.png)
 
 ## The flow of information and events
 
-TODO - describe what each network node does and when. Some periodic events? Some reaction on 
-incoming packets? Perhaps split into several subsections, where each subsection describes one 
-node type (For example: one subsection for sensor/actuator nodes, one for control panel nodes).
+After a connection has been established between a control panel and the server, the control panel will send a request
+for the nodes on the network. The server will then send a list of all the nodes on the network. After this, the server
+starts sending sensor data to the control panel whenever it is updated. The control panel will then display this data.
 
-Commands are sent from a control panel, the command can be to a specific sensor node, multicasted or broadcasted.
-The nodes can also send messages, these will be either single-casted or broadcasted. When a command is sent, the
-actuator will perform the command and a response will be sent. The response depends on the command that was sent. If
-for example on control panel wants to know whether an actuator is on or not, then the response does not need to be sent
-to all control panels. If the command that control panel sends is to actually turn it on or off, then all control panels
-should be notified.
+The control panel can send a command to a specific node, multicast or broadcast. The server will then execute the 
+command on the greenhouse. After the command has been executed, the server will send a response to all control panels,
+updating them on the current state of the nodes. Each client handler acts as a listener to the nodes, so whenever a node
+is changed, the client handler will be notified and send the updated data to the control panels.
+
 
 ## Connection and state
 
-TODO - is your communication protocol connection-oriented or connection-less? Is it stateful or 
-stateless? 
-The communication is connection oriented, as we're using TCP for the transport protocol.
+The communication is connection oriented, as we're using TCP for the transport protocol. The server will keep track of
+all the controls panels that are connected to it. Each control panel will be handled in a separate thread. When a 
+control panel sends a request for a list of all the nodes, the server will send this, then also start sending 
+sensor data to the control panel. The server sends sensor data whenever it is updated. 
 
 ## Types, constants
 
-TODO - Do you have some specific value types you use in several messages? They you can describe 
-them here.
+ * Boolean - 1 or 0, represents true or false.
+ * NodeID - integer, represents the ID of a node.
+ * ActuatorID - integer, represents the ID of an actuator.
+ * commandType - string, represents the type of command that is sent to a node.
+ * messageValue - a value, can be a sensor reading or a state of an actuator.
 
 ## Message format
 
-TODO - describe the general format of all messages. Then describe specific format for each 
-message type in your protocol.
-
 There are two types of messages, a regular message and a command. The commands will only be sent from the control panels
-and will have a type (what the command does), a nodeID (which node gets affected).
+and will generally have a type (what the command does), a nodeID (which node gets affected), and an actuatorID. Some
+commands don't need all this information though, so they might not have all of these fields. 
 
-We will use the symbol "|" as a separator. So an example message could look like this "turnOn|4561". If the command 
+We will use the symbol "|" as a separator. So an example message could look like this "turnOn|4561|1". If the command 
 should be broadcasted, then we use a B symbol instead of the nodeID; like this: "turnOn|B". The structure of a message 
-will be similar to the structure of a command. 
+will be similar to the structure of a command.
 
-Commands: "commandType|nodeID|actuatorID/sensorID|"
-* turnOn - turns on an actuator. type: "on"
-* turnOff - turns off an actuator. type: "off"
-* toggle - toggles an actuator on or off. type "toggle"
-* getState - returns the state of an actuator, on or off. type: "getState"
-* getValue - gets the value of a sensor. type: "getValue"
+Commands: "commandType|nodeID|actuatorID/sensorID|value|"
+* setState - sets the state of an actuator, on or off. type: "setState"
 * getListOfSensors - returns a list of sensors does not require an actuatorId or sensorID. type: "getSensors"
 * getListOfActuators - returns a list of actuators, does not require an actuatorId or sensorID. type: "getActuators"
 * getListOfNodes - returns a list of all nodes. type: "getNodes"
