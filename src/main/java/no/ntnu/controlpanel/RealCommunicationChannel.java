@@ -27,9 +27,17 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   }
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-    //TODO implement
+    if (isOn) {
+      socketWriter.println("on/" + nodeId + "|" + actuatorId + "|");
+    } else {
+      socketWriter.println("off/" + nodeId + "|" + actuatorId + "|");
+    }
   }
 
+  /**
+  * Initializes nodes based on the provided tokens. Each token represents a node and its actuators.
+  * @param tokens The tokens representing the nodes and their actuators.
+  */
   public void initNodes(String[] tokens) {
     for (int i = 1; i < tokens.length; i++) {
       System.out.println("Adding node " + tokens[i]);
@@ -50,10 +58,17 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     }
   }
 
+  /**
+   * Sends a command to get the list of nodes.
+   */
   public void sendGetNodesCommand() {
     socketWriter.println("getNodes");
   }
 
+  /**
+   * Continuously reads responses from the server and handles them based on their type.
+   * Currently handles "sensorReading" and "nodes" messages.
+   */
   @Override
   public void run() {
     //TODO complete implementation
@@ -73,6 +88,11 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     }
   }
 
+  /**
+   * Parses a sensor reading string into a list of SensorReading objects.
+   * @param sensorReading The sensor reading string to parse.
+   * @return A list of SensorReading objects representing the parsed sensor readings.
+   */
   public List<SensorReading> parseSensorReading(String sensorReading) {
     System.out.println("Parsing sensor reading: " + sensorReading);
     ArrayList<SensorReading> sensorReadings = new ArrayList<>();
@@ -86,11 +106,19 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     return sensorReadings;
   }
 
+  /**
+   * Checks if the communication channel is open.
+   * @return true if the communication channel is open, false otherwise.
+   */
   @Override
   public boolean open() {
     return isOpen;
   }
 
+  /**
+   * Reads a response from the server.
+   * @return The response from the server, or null if an error occurred while reading the response.
+   */
   public String readResponse() {
     String response = null;
     try {
@@ -101,6 +129,10 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     return response;
   }
 
+  /**
+   * Sets the socket for this communication channel and initializes the input and output streams.
+   * @param socket The socket to set for this communication channel.
+   */
   public void setSocket(Socket socket) {
     this.socket = socket;
     try {

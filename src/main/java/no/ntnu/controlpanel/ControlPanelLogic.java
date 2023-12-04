@@ -55,26 +55,50 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     }
   }
 
+  /**
+   * Notifies all listeners that a new node has been added.
+   * @param nodeInfo The information about the added node.
+   */
   @Override
   public void onNodeAdded(SensorActuatorNodeInfo nodeInfo) {
     listeners.forEach(listener -> listener.onNodeAdded(nodeInfo));
   }
 
+  /**
+   * Notifies all listeners that a node has been removed.
+   * @param nodeId The ID of the removed node.
+   */
   @Override
   public void onNodeRemoved(int nodeId) {
     listeners.forEach(listener -> listener.onNodeRemoved(nodeId));
   }
 
+  /**
+   * Notifies all listeners that new sensor data has been received.
+   * @param nodeId The ID of the node that the sensor data belongs to.
+   * @param sensors The received sensor data.
+   */
   @Override
   public void onSensorData(int nodeId, List<SensorReading> sensors) {
     listeners.forEach(listener -> listener.onSensorData(nodeId, sensors));
   }
 
+  /**
+   * Notifies all listeners that the state of an actuator has changed.
+   * @param nodeId The ID of the node that the actuator belongs to.
+   * @param actuatorId The ID of the actuator whose state has changed.
+   * @param isOn The new state of the actuator.
+   */
   @Override
   public void onActuatorStateChanged(int nodeId, int actuatorId, boolean isOn) {
     listeners.forEach(listener -> listener.onActuatorStateChanged(nodeId, actuatorId, isOn));
   }
 
+  /**
+   * Updates the state of an actuator and notifies all listeners about the change.
+   * @param nodeId The ID of the node that the actuator belongs to.
+   * @param actuator The actuator whose state has been updated.
+   */
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
     if (communicationChannel != null) {
@@ -85,6 +109,9 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     );
   }
 
+  /**
+   * Handles the event that the communication channel has been closed.
+   */
   @Override
   public void onCommunicationChannelClosed() {
     Logger.info("Communication closed, updating logic...");
