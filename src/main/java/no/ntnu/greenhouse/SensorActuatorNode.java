@@ -183,6 +183,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     return running;
   }
 
+  /**
+   * Starts a timer to generate new sensor values at fixed intervals.
+   */
   private void startPeriodicSensorReading() {
     sensorReadingTimer = new Timer();
     TimerTask newSensorValueTask = new TimerTask() {
@@ -195,6 +198,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     sensorReadingTimer.scheduleAtFixedRate(newSensorValueTask, randomStartDelay, SENSING_DELAY);
   }
 
+  /**
+   * Stops the periodic generation of sensor values.
+   */
   private void stopPeriodicSensorReading() {
     if (sensorReadingTimer != null) {
       sensorReadingTimer.cancel();
@@ -211,12 +217,18 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     debugPrint();
   }
 
+  /**
+   * Adds random noise to each sensor.
+   */
   private void addRandomNoiseToSensors() {
     for (Sensor sensor : sensors) {
       sensor.addRandomNoise();
     }
   }
 
+  /**
+   * Prints debug information about sensors and actuators.
+   */
   private void debugPrint() {
     for (Sensor sensor : sensors) {
       Logger.infoNoNewline(" " + sensor.getReading().getFormatted());
@@ -240,22 +252,43 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     actuator.toggle();
   }
 
+  /**
+   * Getter for the actuator instance.
+   *
+   * @param actuatorId The unique identifier of the actuator to be retrieved.
+   * @return Returns the actuator instance.
+   */
   private Actuator getActuator(int actuatorId) {
     return actuators.get(actuatorId);
   }
 
+  /**
+   * Notifies sensor listener about changes to sensors in the current node.
+   */
   private void notifySensorChanges() {
     for (SensorListener listener : sensorListeners) {
       listener.sensorsUpdated(Integer.toString(id), sensors);
     }
   }
 
+  /**
+   * Overrides the method in the ActuatorUpdater interface to handle updates
+   * from an external actuator.
+   *
+   * @param nodeId   ID of the node on which this actuator is placed
+   * @param actuator The actuator that has changed its state
+   */
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
     actuator.applyImpact(this);
     notifyActuatorChange(actuator);
   }
 
+  /**
+   * Notifies listeners about change in the specified actuator.
+   *
+   * @param actuator The actuator which change is notified.
+   */
   private void notifyActuatorChange(Actuator actuator) {
     String onOff = actuator.isOn() ? "ON" : "off";
     Logger.info(" => " + actuator.getType() + " on node " + id + " " + onOff);
