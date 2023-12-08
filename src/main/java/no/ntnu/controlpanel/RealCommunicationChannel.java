@@ -28,13 +28,9 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     socketWriter.println("setState|" + nodeId + "|" + actuatorId + "|" + (isOn ? "on" : "off"));
   }
 
-  public void sendDeleteNodeCommand(int nodeId) {
-    socketWriter.println("deleteNode|" + nodeId); //TODO implement ability to delete nodes.
-  }
-
   public void sendBroadcastStateCommand(int nodeID, boolean state) {
-    Logger.info("Sent: " + "broadcastState");
-    socketWriter.println("setState|" + nodeID + "|" + "B" + state);
+    Logger.info("setBroadcastState|" + nodeID + "|" + (state ? "on" : "off"));
+    socketWriter.println("setBroadcastState|" + nodeID + "|" + (state ? "on" : "off"));
   }
 
   /**
@@ -90,6 +86,9 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
         case "state":
           parseStateMessage(tokens[1], tokens[2], tokens[3]);
           break;
+        case "broadCastState":
+          parseBroadcastStateMessage(tokens[1], tokens[2]);
+          break;
       }
       running = !(response == null);
     }
@@ -99,6 +98,13 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     boolean stateBool = state.equals("on");
     logic.onActuatorStateChanged(Integer.parseInt(nodeID), Integer.parseInt(actuatorID), stateBool);
   }
+
+  public void parseBroadcastStateMessage(String nodeID, String state) {
+    System.out.println("broadcaststate method");
+    boolean stateBool = state.equals("on");
+    logic.onAllActuatorChange(Integer.parseInt(nodeID), stateBool);
+  }
+
 
   /**
    * Parses a sensor reading string into a list of SensorReading objects.

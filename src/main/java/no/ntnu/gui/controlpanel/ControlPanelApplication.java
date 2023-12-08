@@ -161,6 +161,14 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     }
   }
 
+  @Override
+  public void onAllActuatorChange(int nodeID, boolean isOn) {
+    for (Actuator actuator : nodeInfos.get(nodeID).getActuators()) {
+      Logger.info("actuator[" + actuator.getId() + "] on node " + nodeID + " is " + isOn);
+      onActuatorStateChanged(nodeID, actuator.getId(), isOn);
+    }
+  }
+
   private Actuator getStoredActuator(int nodeId, int actuatorId) {
     Actuator actuator = null;
     SensorActuatorNodeInfo nodeInfo = nodeInfos.get(nodeId);
