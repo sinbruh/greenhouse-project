@@ -8,6 +8,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import no.ntnu.communication.Message;
 
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+
 /**
  *
  * The GreenhouseServer class manages the communication between the GreenhouseSimulator,
@@ -16,16 +19,20 @@ import no.ntnu.communication.Message;
  *
  */
 public class GreenhouseServer {
-    public static final int NODE_PORT = 1026;
     public static final int CONTROL_PANEL_PORT = 1025;
     private GreenhouseSimulator greenhouseSimulator;
     private boolean isTcpServerRunning;
     private ArrayList<Socket> controlPanels;
+    private SSLServerSocketFactory socketFactory;
+    private ServerSocket serverSocket;
 
-    public GreenhouseServer(GreenhouseSimulator greenhouseSimulator) {
+    public GreenhouseServer(GreenhouseSimulator greenhouseSimulator){
         this.greenhouseSimulator = greenhouseSimulator;
         this.controlPanels = new ArrayList<>();
         startGreenhouse();
+
+        socketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+        serverSocket = openListeningSocket(CONTROL_PANEL_PORT);
     }
 
     /**
@@ -43,25 +50,21 @@ public class GreenhouseServer {
      * @param @controlPanelPort The port of the control panel listening socket.
      * @param @nodePort The port of the node listening socket.
      */
-    public void startServer(int controlPanelPort, int nodePort) {
-        ServerSocket controlPanelSocket = openListeningSocket(controlPanelPort);
-        ServerSocket nodeSocket = openListeningSocket(nodePort);
-
-        System.out.println("Server listening for node on port " + nodePort);
-        if (controlPanelSocket != null) {
+    public void startServer(int controlPanelPort) throws IOException {
+        System.out.println("Server listening for control panels on port " + controlPanelPort);
             isTcpServerRunning = true;
             while (isTcpServerRunning) {
-                Socket clientSocket = acceptNextClientConnection(controlPanelSocket);
+                SSLSocket clientSocket = acceptNextClientConnection(serverSocket);
                 if (clientSocket != null) {
+                    clientSocket.startHandshake();
                     System.out.println("New client connected from " + clientSocket.getRemoteSocketAddress());
                     controlPanels.add(clientSocket);
 
-                    ClientHandler clientHandler = new ClientHandler(clientSocket, greenhouseSimulator);
+                    ClientHandler clientHandler = new ClientHandler(clientSocket);
                     greenhouseSimulator.getNodes().values().forEach(node -> node.addSensorListener(clientHandler));
                     clientHandler.start();
                 }
             }
-        }
     }
 
     /**
@@ -73,9 +76,9 @@ public class GreenhouseServer {
     private ServerSocket openListeningSocket(int port) {
         ServerSocket listeningSocket = null;
         try {
-            listeningSocket = new ServerSocket(port);
+            listeningSocket = socketFactory.createServerSocket();
         } catch (IOException e) {
-            System.err.println("Failed to open listening socket: " + e.getMessage());
+            //System.err.println("Failed to open listening socket: " + e.getMessage());
         }
         return listeningSocket;
     }
@@ -87,12 +90,14 @@ public class GreenhouseServer {
      * @param listeningSocket The ServerSocket on which to accept the next client connection.
      * @return A Socket representing the accepted client connection if successful, or null if an exception occurs.
      */
-    private Socket acceptNextClientConnection(ServerSocket listeningSocket) {
-        Socket clientSocket = null;
+    private SSLSocket acceptNextClientConnection(ServerSocket listeningSocket) {
+        SSLSocket clientSocket = null;
         try {
-            clientSocket = listeningSocket.accept();
+            clientSocket = (SSLSocket) listeningSocket.accept();
         } catch (IOException e) {
-            System.err.println("Failed to open client socket: " + e.getMessage());
+            if (clientSocket != null) {
+                System.err.println("Failed to open client socket: " + e.getMessage());
+            }
         }
         return clientSocket;
     }

@@ -1,5 +1,7 @@
 package no.ntnu.server;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.prefs.NodeChangeEvent;
@@ -19,28 +21,55 @@ import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
 
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+
 /**
  * The ClientHandler class is responsible for managing the communication with a single client.
  * It reads client requests, executes corresponding commands, and sends responses back to the client.
  */
 public class ClientHandler extends Thread implements NodeStateListener, NodeChangeListener,
     SensorListener {
-    private BufferedReader socketReader;
     private Socket clientSocket;
     private GreenhouseSimulator simulator;
-    private PrintWriter socketWriter;
     private boolean readyToReceive; //Is the control panel ready to receive readings or not
+
+    // Ny kode for SSL
+    private SSLSocket socket;
+    private ObjectInputStream input;
+    private ObjectOutputStream output;
 
     /**
      * Constructs a ClientHandler with the specified clientSocket, GreenhouseSimulator, and GreenhouseServer.
      *
      * @param clientSocket The Socket representing the connection to the client.
      * @param simulator The GreenhouseSimulator associated with the server.
-     */
+     *
     public ClientHandler(Socket clientSocket, GreenhouseSimulator simulator) {
         this.clientSocket = clientSocket;
         this.simulator = simulator;
         readyToReceive = false;
+    }
+    */
+
+
+    /**
+     * New constructor for ClientHandler with SSL function.
+     *
+     * @param clientSocket SSL clientSocket
+     * @throws IOException
+     */
+    public ClientHandler(SSLSocket clientSocket) throws IOException {
+        try {
+            this.socket = clientSocket;
+            this.output = new ObjectOutputStream(socket.getOutputStream());
+            this.input = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            // Handle the IOException
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -50,13 +79,6 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
      */
     private boolean initializeStreams() {
         boolean success = true;
-        try {
-            socketReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            socketWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-        } catch (IOException e) {
-            success = false;
-            System.err.println("Could not initialize streams");
-        }
         return success;
     }
 
@@ -65,9 +87,7 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
      * processes corresponding commands, and sends responses back to the client.
      */
     public void run() {
-        if (!initializeStreams()) {
-            return;
-        }
+
 
         System.out.println("handling new client on " + Thread.currentThread().getName());
 
@@ -108,7 +128,7 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
     private Command readClientRequest() {
         Message clientCommand = null;
         try {
-            String rawClientRequest = socketReader.readLine();
+            String rawClientRequest = input.readUTF();
             System.out.println("Recieved from client: " + rawClientRequest);
             clientCommand = MessageSerializer.fromString(rawClientRequest);
 
@@ -128,8 +148,12 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
      * @param response The Message object to be sent as a response to the client.
      */
     private void sendResponseToClient(Message response) {
-            socketWriter.println(MessageSerializer.toString(response));
-            System.out.println("Sent response to " + clientSocket.getRemoteSocketAddress());
+        try {
+            output.writeUTF(MessageSerializer.toString(response));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Sent response to " + clientSocket.getRemoteSocketAddress());
     }
 
     @Override

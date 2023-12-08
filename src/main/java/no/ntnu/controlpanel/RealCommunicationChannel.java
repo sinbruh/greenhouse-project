@@ -2,7 +2,11 @@ package no.ntnu.controlpanel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -14,11 +18,13 @@ import no.ntnu.greenhouse.Sensor;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
 
+import javax.net.ssl.SSLSocket;
+
 public class RealCommunicationChannel extends Thread implements CommunicationChannel {
-  private Socket socket;
+  private SSLSocket socket;
   private ControlPanelLogic logic;
-  private PrintWriter socketWriter;
-  private BufferedReader socketReader;
+  private ObjectOutputStream socketWriter;
+  private ObjectInputStream socketReader;
   private boolean isOpen;
 
   public RealCommunicationChannel(ControlPanelLogic logic) {
@@ -51,7 +57,11 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   }
 
   public void sendGetNodesCommand() {
-    socketWriter.println("getNodes");
+    try {
+      socketWriter.writeUTF("getNodes");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -94,18 +104,18 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   public String readResponse() {
     String response = null;
     try {
-      response = socketReader.readLine();
+      response = socketReader.readUTF();
     } catch (IOException e) {
       System.err.println("Could not read response from server");
     }
     return response;
   }
 
-  public void setSocket(Socket socket) {
+  public void setSocket(SSLSocket socket) {
     this.socket = socket;
     try {
-      socketWriter = new PrintWriter(socket.getOutputStream(), true);
-      socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      socketWriter = (ObjectOutputStream) socket.getOutputStream();
+      socketReader = (ObjectInputStream) socket.getInputStream();
       isOpen = true;
     } catch (IOException e) {
       System.err.println("could not initialize stream");

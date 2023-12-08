@@ -9,6 +9,9 @@ import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.server.GreenhouseServer;
 import no.ntnu.tools.Logger;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+
 /**
  * Starter class for the control panel.
  * Note: we could launch the Application class directly, but then we would have issues with the
@@ -61,11 +64,14 @@ public class ControlPanelStarter {
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
     RealCommunicationChannel communicationChannel = new RealCommunicationChannel(logic);
     try {
-      Socket socket = new Socket("localhost", GreenhouseServer.CONTROL_PANEL_PORT);
+      SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+
+      SSLSocket socket = (SSLSocket) socketFactory.createSocket("localhost", GreenhouseServer.CONTROL_PANEL_PORT);
       communicationChannel.setSocket(socket);
       logic.setCommunicationChannel(communicationChannel);
     } catch (Exception e) {
       Logger.error("Failed to start socket communication: " + e.getMessage());
+      e.printStackTrace();
       System.exit(1);
     }
     return communicationChannel;
