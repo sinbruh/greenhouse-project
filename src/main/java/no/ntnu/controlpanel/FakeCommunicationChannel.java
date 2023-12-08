@@ -200,4 +200,9 @@ public class FakeCommunicationChannel implements CommunicationChannel {
   public void start() {
     Logger.info("start() does nothing for the fake spawner, all the timers are running already...");
   }
+
+  @Override
+  public void sendBroadcastStateCommand(int id, boolean b) {
+    Logger.info("sendBroadcastStateCommand() does nothing for the fake spawner, all the timers are running already...");
+  }
 }

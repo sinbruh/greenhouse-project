@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.prefs.NodeChangeEvent;
 import java.util.prefs.NodeChangeListener;
-import no.ntnu.communication.commands.GetListOfNodes;
+import no.ntnu.communication.commands.GetListOfNodeInfo;
 import no.ntnu.communication.messages.SensorReadingMessage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.communication.Message;
@@ -81,7 +81,7 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
 
             System.out.println("Recieved from client: " + clientCommand);
 
-            if (clientCommand instanceof GetListOfNodes) {
+            if (clientCommand instanceof GetListOfNodeInfo) {
                 readyToReceive = true;
             }
 

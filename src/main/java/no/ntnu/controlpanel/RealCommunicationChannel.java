@@ -7,10 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import no.ntnu.communication.commands.GetListOfNodes;
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.DeviceFactory;
-import no.ntnu.greenhouse.Sensor;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
 
@@ -31,13 +28,22 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     socketWriter.println("setState|" + nodeId + "|" + actuatorId + "|" + (isOn ? "on" : "off"));
   }
 
+  public void sendDeleteNodeCommand(int nodeId) {
+    socketWriter.println("deleteNode|" + nodeId); //TODO implement ability to delete nodes.
+  }
+
+  public void sendBroadcastStateCommand(int nodeID, boolean state) {
+    Logger.info("Sent: " + "broadcastState");
+    socketWriter.println("setState|" + nodeID + "|" + "B" + state);
+  }
+
   /**
   * Initializes nodes based on the provided tokens. Each token represents a node and its actuators.
   * @param tokens The tokens representing the nodes and their actuators.
   */
   public void initNodes(String[] tokens) {
     for (int i = 1; i < tokens.length; i++) {
-      System.out.println("Adding node " + tokens[i]);
+      Logger.info("Adding node " + tokens[i]);
 
 
       String[] nodeTokens = tokens[i].split(":");
@@ -64,7 +70,6 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
 
   /**
    * Continuously reads responses from the server and handles them based on their type.
-   * Currently handles "sensorReading" and "nodes" messages.
    */
   @Override
   public void run() {

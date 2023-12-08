@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -201,9 +202,22 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     ActuatorPane actuatorPane = new ActuatorPane(nodeInfo.getActuators());
     actuatorPane.addActuatorListener(this);
     actuatorPanes.put(nodeInfo.getId(), actuatorPane);
-    tab.setContent(new VBox(sensorPane, actuatorPane));
+    HBox toolbar = createToolBar(nodeInfo);
+    tab.setContent(new VBox(sensorPane, actuatorPane, toolbar));
     nodeTabs.put(nodeInfo.getId(), tab);
     return tab;
+  }
+
+  private HBox createToolBar(SensorActuatorNodeInfo nodeInfo) {
+    HBox toolBar = new HBox();
+    toolBar.setSpacing(10);
+    toolBar.setAlignment(Pos.CENTER);
+    Button allOnButton = new Button("All on");
+    Button allOffButton = new Button("All off");
+    allOnButton.setOnAction(event -> channel.sendBroadcastStateCommand(nodeInfo.getId(),true));
+    allOffButton.setOnAction(event -> channel.sendBroadcastStateCommand(nodeInfo.getId(), false));
+    toolBar.getChildren().addAll(allOnButton, allOffButton);
+    return toolBar;
   }
 
   private static SensorPane createEmptySensorPane() {
