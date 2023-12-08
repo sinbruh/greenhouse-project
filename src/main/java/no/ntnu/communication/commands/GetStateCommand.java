@@ -32,7 +32,7 @@ public class GetStateCommand extends Command {
   @Override
   public Message execute(GreenhouseSimulator simulator) {
     Actuator actuator = new Actuator(actuatorID, Integer.parseInt(nodeID));
-    return new StateMessage(nodeID, actuatorID, actuator.isOn() ? "on" : "off");
+    return new StateMessage(Integer.parseInt(nodeID), Integer.parseInt(actuatorID), actuator.isOn());
   }
 
   /**

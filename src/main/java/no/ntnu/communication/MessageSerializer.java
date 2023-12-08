@@ -22,9 +22,6 @@ public class MessageSerializer {
       case "getNodes" -> message = new GetListOfNodeInfo();
       case "getValue" -> message = new GetValueCommand(tokens[0], tokens[1]);
       case "setBroadcastState" -> message = new BroadCastSetStateCommand(tokens[1], tokens[2]);
-      //Messages
-      case "state" -> message = new StateMessage(tokens[0], tokens[1], tokens[2]);
-      case "sensors" -> message = new SensorListMessage(tokens[0], tokens[1]);
     }
 
     return message;

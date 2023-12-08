@@ -6,6 +6,8 @@ import java.util.prefs.NodeChangeEvent;
 import java.util.prefs.NodeChangeListener;
 import no.ntnu.communication.commands.GetListOfNodeInfo;
 import no.ntnu.communication.messages.SensorReadingMessage;
+import no.ntnu.communication.messages.StateMessage;
+import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.communication.Message;
 import no.ntnu.communication.Command;
@@ -16,6 +18,7 @@ import java.net.Socket;
 import no.ntnu.communication.MessageSerializer;
 import no.ntnu.greenhouse.Sensor;
 import no.ntnu.greenhouse.SensorActuatorNode;
+import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
 
@@ -24,7 +27,7 @@ import no.ntnu.listeners.greenhouse.SensorListener;
  * It reads client requests, executes corresponding commands, and sends responses back to the client.
  */
 public class ClientHandler extends Thread implements NodeStateListener, NodeChangeListener,
-    SensorListener {
+    SensorListener, ActuatorListener {
     private BufferedReader socketReader;
     private Socket clientSocket;
     private GreenhouseSimulator simulator;
@@ -161,6 +164,13 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
     public void sensorsUpdated(String nodeID, List<Sensor> sensors) {
         if (readyToReceive) {
             sendResponseToClient(new SensorReadingMessage(nodeID, sensors));
+        }
+    }
+
+    @Override
+    public void actuatorUpdated(int nodeId, Actuator actuator) {
+        if (readyToReceive) {
+            sendResponseToClient(new StateMessage(nodeId, actuator.getId(), actuator.isOn()));
         }
     }
 }

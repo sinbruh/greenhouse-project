@@ -44,7 +44,7 @@ public class SetStateCommand extends Command {
         } else {
             return new ErrorMessage("error: invalid value in setState command");
         }
-        return new StateMessage(nodeID, actuatorID, actuator.isOn() ? "on" : "off");
+        return new StateMessage(Integer.parseInt(nodeID), Integer.parseInt(actuatorID), actuator.isOn());
     }
 
     /**

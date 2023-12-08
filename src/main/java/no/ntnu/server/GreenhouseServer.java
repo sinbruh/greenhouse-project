@@ -55,7 +55,10 @@ public class GreenhouseServer {
                     controlPanels.add(clientSocket);
 
                     ClientHandler clientHandler = new ClientHandler(clientSocket, greenhouseSimulator);
-                    greenhouseSimulator.getNodes().values().forEach(node -> node.addSensorListener(clientHandler));
+                    greenhouseSimulator.getNodes().values().forEach(node -> {
+                        node.addSensorListener(clientHandler);
+                        node.addActuatorListener(clientHandler);
+                    });
                     clientHandler.start();
                 }
             }

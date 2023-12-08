@@ -49,6 +49,11 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
         for (int j = 1; j < nodeTokens.length; j++) {
           String[] actuatorTokens = nodeTokens[j].split("/");
           nodeInfo.addActuator(new Actuator(Integer.parseInt(actuatorTokens[0]), actuatorTokens[1], nodeId));
+          if (actuatorTokens.length > 2 && actuatorTokens[2].equals("on")) {
+            nodeInfo.getActuator(Integer.parseInt(actuatorTokens[0])).set(true);
+          } else if (actuatorTokens[2].equals("off")) {
+            nodeInfo.getActuator(Integer.parseInt(actuatorTokens[0])).set(false);
+          }
           Logger.info("Added actuator " + actuatorTokens[0] + " to node " + nodeId);
         }
       }
