@@ -71,16 +71,13 @@ will be similar to the structure of a command.
 Commands: "commandType|nodeID|actuatorID/sensorID|value|"
 * setState - sets the state of an actuator, on or off. type: "setState"
 * getListOfSensors - returns a list of sensors does not require an actuatorId or sensorID. type: "getSensors"
-* getListOfActuators - returns a list of actuators, does not require an actuatorId or sensorID. type: "getActuators"
 * getListOfNodes - returns a list of all nodes. type: "getNodes"
 
 Messages: "messageType|messageValue|nodeID|sensorID"
 * state - the state of an actuator, can be on or off. type: "state"
 * listOfSensors - returns a list of sensor. The list will be in the form of a string and needs to be parsed.
     The separator used in the string to separate sensors is a colon ":". type: "sensors"
-* listOfActuators - returns a list of actuators. The list will be in the form of a string and needs to be parsed.
-    The separator used in the string to separate actuators is a colon ":". type: "actuators"
-* listOfNodes - returns a list of nodes. The list will be in the form of a string and needs to be parsed.
+* listOfNodeInfo - returns a list of nodes. The list will be in the form of a string and needs to be parsed.
     The separator used in the string to separate nodes is a colon ":". type: "nodes"
 * successful operation - when a command is sent to a sensor-actuator node, a successful operation will be sent to
     the control panel that sent the command. type: "so"
@@ -91,8 +88,7 @@ Messages: "messageType|messageValue|nodeID|sensorID"
     sensors. the sensor type can be humidity or temperature (currently). type: "sensorReading"
 
 ### Error messages
-
-TODO - describe the possible error messages that nodes can send in your system.
+ 
 
 * Too many arguments.
 * Invalid ID.
@@ -101,9 +97,6 @@ TODO - describe the possible error messages that nodes can send in your system.
 
 ## An example scenario
 
-TODO - describe a typical scenario. How would it look like from communication perspective? When 
-are connections established? Which packets are sent? How do nodes react on the packets? An 
-example scenario could be as follows:
 1. A sensor node with ID=1 is started. It has a temperature sensor, two humidity sensors. It can
    also open a window.
 2. A sensor node with ID=2 is started. It has a single temperature sensor and can control two fans
@@ -119,3 +112,4 @@ example scenario could be as follows:
 ## Reliability and security
 
 TODO - describe the reliability and security mechanisms your solution supports.
+
