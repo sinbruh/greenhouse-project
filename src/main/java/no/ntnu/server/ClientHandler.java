@@ -17,6 +17,7 @@ import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.greenhouse.Sensor;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
+import no.ntnu.tools.Logger;
 
 /**
  * The ClientHandler class is responsible for managing the communication with a single client.
@@ -28,7 +29,10 @@ public class ClientHandler extends Thread implements SensorListener, ActuatorLis
   private final Socket clientSocket;
   private final GreenhouseSimulator simulator;
   private PrintWriter socketWriter;
-  private boolean readyToReceive; //Is the control panel ready to receive readings or not
+  private boolean readyToReceive;
+
+  private static final String RECEIVED_FROM_CLIENT_MESSAGE = "Received from client: ";
+
 
   /**
    * Constructs a ClientHandler with the specified clientSocket,
@@ -55,7 +59,7 @@ public class ClientHandler extends Thread implements SensorListener, ActuatorLis
       socketWriter = new PrintWriter(clientSocket.getOutputStream(), true);
     } catch (IOException e) {
       success = false;
-      System.err.println("Could not initialize streams");
+      Logger.info("Could not initialize streams");
     }
     return success;
   }
@@ -70,7 +74,7 @@ public class ClientHandler extends Thread implements SensorListener, ActuatorLis
       return;
     }
 
-    System.out.println("handling new client on " + Thread.currentThread().getName());
+    Logger.info("handling new client on " + Thread.currentThread().getName());
 
     Message response = null;
     do {
@@ -80,7 +84,7 @@ public class ClientHandler extends Thread implements SensorListener, ActuatorLis
         break;
       }
 
-      System.out.println("Recieved from client: " + clientCommand);
+      Logger.info(RECEIVED_FROM_CLIENT_MESSAGE + clientCommand);
 
       if (clientCommand instanceof GetListOfNodeInfo) {
         readyToReceive = true;
@@ -88,16 +92,16 @@ public class ClientHandler extends Thread implements SensorListener, ActuatorLis
 
       try {
         response = clientCommand.execute(simulator);
-        System.out.println("Response: " + response.messageAsString());
+        Logger.info("Response: " + response.messageAsString());
       } catch (Exception e) {
-        System.err.println("Could not execute command: " + e.getMessage());
+        Logger.info("Could not execute command: " + e.getMessage());
       }
 
       if (response != null) {
         sendResponseToClient(response);
       }
 
-      System.out.println("Recieved from client: " + clientCommand);
+      Logger.info(RECEIVED_FROM_CLIENT_MESSAGE + clientCommand);
     } while (response != null);
   }
 
@@ -110,15 +114,15 @@ public class ClientHandler extends Thread implements SensorListener, ActuatorLis
     Message clientCommand = null;
     try {
       String rawClientRequest = socketReader.readLine();
-      System.out.println("Recieved from client: " + rawClientRequest);
+      Logger.info(RECEIVED_FROM_CLIENT_MESSAGE + rawClientRequest);
       clientCommand = MessageSerializer.fromString(rawClientRequest);
 
       if (!(clientCommand instanceof Command)) {
-        System.err.println("Invalid message recieved");
+        Logger.info("Invalid message recieved");
         clientCommand = null;
       }
     } catch (IOException e) {
-      System.err.println("Could not receive client request: " + e.getMessage());
+      Logger.info("Could not receive client request: " + e.getMessage());
     }
     return (Command) clientCommand;
   }
@@ -130,7 +134,7 @@ public class ClientHandler extends Thread implements SensorListener, ActuatorLis
    */
   private void sendResponseToClient(Message response) {
     socketWriter.println(MessageSerializer.toString(response));
-    System.out.println("Sent response to " + clientSocket.getRemoteSocketAddress());
+    Logger.info("Sent response to " + clientSocket.getRemoteSocketAddress());
   }
 
   /**
