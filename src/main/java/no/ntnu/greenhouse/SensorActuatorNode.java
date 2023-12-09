@@ -93,7 +93,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     }
     for (SensorType type : types) {
       for (int i = 0; i < n; ++i) {
-        Sensor sensor = DeviceFactory.createSensorBasedOnType(type);
+        Sensor sensor = DeviceFactory.createSensorBasedOnType(type, i);
         sensors.add(sensor);
 
         sensorsByType.computeIfAbsent(type, k -> new ArrayList<>()).add(sensor);

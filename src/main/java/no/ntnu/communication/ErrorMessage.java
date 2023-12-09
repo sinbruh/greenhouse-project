@@ -6,6 +6,7 @@ package no.ntnu.communication;
  * This class extends the abstract Message class.
  */
 public class ErrorMessage extends Message {
+  private final String message;
 
   /**
    * Constructs an ErrorMessage object.
@@ -13,7 +14,7 @@ public class ErrorMessage extends Message {
    * @param message The error message string.
    */
   public ErrorMessage(String message) {
-    super();
+    this.message = message;
   }
 
   /**
@@ -22,6 +23,6 @@ public class ErrorMessage extends Message {
    * @return The string representation of this error message, which is always "error".
    */
   public String messageAsString() {
-    return "error";
+    return "error" + "|" + message;
   }
 }

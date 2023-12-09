@@ -5,8 +5,17 @@ import no.ntnu.communication.Message;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.SensorActuatorNode;
 
+/**
+ * Message class that will list all the nodes in the greenhouse.
+ */
 public class ListOfNodesMessage extends Message {
   Collection<SensorActuatorNode> nodes;
+
+  /**
+   * Constructor for the ListOfNodesMessage class.
+   *
+   * @param nodes Collection of SensorActuatorNodes.
+   */
   public ListOfNodesMessage(Collection<SensorActuatorNode> nodes) {
     super();
     this.nodes = nodes;

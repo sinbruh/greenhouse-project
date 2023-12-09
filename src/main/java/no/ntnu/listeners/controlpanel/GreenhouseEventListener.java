@@ -44,5 +44,5 @@ public interface GreenhouseEventListener {
    */
   void onActuatorStateChanged(int nodeId, int actuatorId, boolean isOn);
 
-  void onAllActuatorChange(int nodeID, boolean isOn);
+  void onAllActuatorChange(int nodeid, boolean isOn);
 }

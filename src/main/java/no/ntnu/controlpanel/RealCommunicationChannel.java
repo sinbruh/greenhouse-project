@@ -21,19 +21,21 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     this.logic = logic;
     isOpen = false;
   }
+
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
     Logger.info("Sent: " + "setState|" + nodeId + "|" + actuatorId + "|" + (isOn ? "on" : "off"));
     socketWriter.println("setState|" + nodeId + "|" + actuatorId + "|" + (isOn ? "on" : "off"));
   }
 
-  public void sendBroadcastStateCommand(int nodeID, boolean state) {
-    Logger.info("setBroadcastState|" + nodeID + "|" + (state ? "on" : "off"));
-    socketWriter.println("setBroadcastState|" + nodeID + "|" + (state ? "on" : "off"));
+  public void sendBroadcastStateCommand(int nodeid, boolean state) {
+    Logger.info("setBroadcastState|" + nodeid + "|" + (state ? "on" : "off"));
+    socketWriter.println("setBroadcastState|" + nodeid + "|" + (state ? "on" : "off"));
   }
 
   /**
    * Initializes nodes based on the provided tokens. Each token represents a node and its actuators.
+   *
    * @param tokens The tokens representing the nodes and their actuators.
    */
   public void initNodes(String[] tokens) {
@@ -47,7 +49,8 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
       if (nodeTokens.length > 1) {
         for (int j = 1; j < nodeTokens.length; j++) {
           String[] actuatorTokens = nodeTokens[j].split("/");
-          nodeInfo.addActuator(new Actuator(Integer.parseInt(actuatorTokens[0]), actuatorTokens[1], nodeId));
+          nodeInfo.addActuator(
+              new Actuator(Integer.parseInt(actuatorTokens[0]), actuatorTokens[1], nodeId));
           if (actuatorTokens.length > 2 && actuatorTokens[2].equals("on")) {
             nodeInfo.getActuator(Integer.parseInt(actuatorTokens[0])).set(true);
           } else if (actuatorTokens[2].equals("off")) {
@@ -92,14 +95,17 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
         case "broadCastState":
           parseBroadcastStateMessage(tokens[1], tokens[2]);
           break;
+        default:
+          Logger.error("Unknown message type: " + tokens[0]);
+          break;
       }
       running = !(response == null);
     }
   }
 
-  public void parseStateMessage(String nodeID, String actuatorID, String state) {
+  public void parseStateMessage(String nodeid, String actuatorid, String state) {
     boolean stateBool = state.equals("on");
-    logic.onActuatorStateChanged(Integer.parseInt(nodeID), Integer.parseInt(actuatorID), stateBool);
+    logic.onActuatorStateChanged(Integer.parseInt(nodeid), Integer.parseInt(actuatorid), stateBool);
   }
 
   public void parseBroadcastStateMessage(String nodeID, String state) {
@@ -111,6 +117,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
 
   /**
    * Parses a sensor reading string into a list of SensorReading objects.
+   *
    * @param sensorReading The sensor reading string to parse.
    * @return A list of SensorReading objects representing the parsed sensor readings.
    */
@@ -129,6 +136,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
 
   /**
    * Checks if the communication channel is open.
+   *
    * @return true if the communication channel is open, false otherwise.
    */
   @Override
@@ -138,6 +146,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
 
   /**
    * Reads a response from the server.
+   *
    * @return The response from the server, or null if an error occurred while reading the response.
    */
   public String readResponse() {
@@ -152,6 +161,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
 
   /**
    * Initializes the input and output streams for this communication channel.
+   *
    * @param socket The socket to set for this communication channel.
    */
   public void initializeStreams(Socket socket) {

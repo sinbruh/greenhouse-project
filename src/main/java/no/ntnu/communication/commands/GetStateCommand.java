@@ -12,7 +12,7 @@ import no.ntnu.greenhouse.GreenhouseSimulator;
  */
 public class GetStateCommand extends Command {
   private final String nodeid;
-  private final String actuatorID;
+  private final String actuatorid;
 
   /**
    * Constructor for the GetStateCommand class.
@@ -22,7 +22,7 @@ public class GetStateCommand extends Command {
    */
   public GetStateCommand(String nodeid, String actuatorid) {
     this.nodeid = nodeid;
-    this.actuatorID = actuatorid;
+    this.actuatorid = actuatorid;
   }
 
   /**
@@ -33,16 +33,17 @@ public class GetStateCommand extends Command {
    */
   @Override
   public Message execute(GreenhouseSimulator simulator) {
-    Actuator actuator = new Actuator(actuatorID, Integer.parseInt(nodeid));
-    return new StateMessage(Integer.parseInt(nodeid), Integer.parseInt(actuatorID), actuator.isOn());
+    Actuator actuator = new Actuator(actuatorid, Integer.parseInt(nodeid));
+    return new StateMessage(Integer.parseInt(nodeid), Integer.parseInt(actuatorid), actuator.isOn());
   }
 
   /**
    * Returns the message as a string.
+   *
    * @return the message as a string.
    */
   @Override
   public String messageAsString() {
-    return "GetStateCommand: NodeId=" + nodeid + ", ActuatorID=" + actuatorID;
+    return "GetStateCommand: NodeId=" + nodeid + ", ActuatorID=" + actuatorid;
   }
 }

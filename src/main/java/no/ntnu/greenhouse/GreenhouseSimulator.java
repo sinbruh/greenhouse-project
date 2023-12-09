@@ -114,6 +114,7 @@ public class GreenhouseSimulator {
 
   /**
    * Sets the server of this greenhouse.
+   *
    * @param greenhouseServer the server of this greenhouse
    */
   public void setServer(GreenhouseServer greenhouseServer) {
@@ -122,6 +123,7 @@ public class GreenhouseSimulator {
 
   /**
    * Gets the server of this greenhouse.
+   *
    * @return the server of this greenhouse
    */
   public Map<Integer, SensorActuatorNode> getNodes() {

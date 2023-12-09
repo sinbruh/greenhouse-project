@@ -6,6 +6,9 @@ import no.ntnu.communication.Message;
 import no.ntnu.communication.messages.BroadCastStateMessage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 
+/**
+ * Command class that will set the state of an all actuators on a node.
+ */
 public class BroadCastSetStateCommand extends Command {
   private final String nodeid;
   private final String state;
