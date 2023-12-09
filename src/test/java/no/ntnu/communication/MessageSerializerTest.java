@@ -17,8 +17,8 @@ public class MessageSerializerTest {
     @Test
     public void testMessageFromString() {
         // Test with a TemperatureMessage message
-        String rawClientRequest = "temp|234234|234234|20";
+        String rawClientRequest = "state|234234|234234|on";
         Message message = MessageSerializer.fromString(rawClientRequest);
-        assertTrue(message instanceof TemperatureMessage);
+        assertTrue(message instanceof StateMessage);
     }
 }

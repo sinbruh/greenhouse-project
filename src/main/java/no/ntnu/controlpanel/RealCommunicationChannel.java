@@ -123,13 +123,9 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
           Logger.error("Unknown message type: " + tokens[0]);
           break;
       }
-      running = !(response == null);
     }
   }
 
-  /**
-   * Reconnects to the server. A lot of code in this method was repurposed from AI generated.
-   */
   private void reconnect() {
     for (int attempt = 1; attempt <= MAX_RECONNECT_ATTEMPTS; attempt++) {
       try {
@@ -139,8 +135,11 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
         isOpen = true;
         Logger.info("Reconnected to the server on attempt " + attempt);
         return;
-      } catch (IOException | InterruptedException e) {
+      } catch (IOException e) {
         Logger.error("Reconnection attempt " + attempt + " failed");
+      } catch (InterruptedException e) {
+        Logger.error("Reconnection attempt " + attempt + " interrupted");
+        Thread.currentThread().interrupt();
       }
     }
     Logger.error("Failed to reconnect after " + MAX_RECONNECT_ATTEMPTS + " attempts");

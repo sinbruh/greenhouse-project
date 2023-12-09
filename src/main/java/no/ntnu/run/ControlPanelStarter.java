@@ -103,6 +103,5 @@ public class ControlPanelStarter {
     if (channel instanceof RealCommunicationChannel realChannel) {
       realChannel.closeSocket();
     }
-    // TODO - here you stop the TCP/UDP socket communication
   }
 }

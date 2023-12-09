@@ -10,6 +10,10 @@ import no.ntnu.communication.commands.SetStateCommand;
  */
 public class MessageSerializer {
 
+  private MessageSerializer() {
+    //Empty constructor
+  }
+
   /**
    * Deserializes a string into a Message object.
    * The type of the Message object is determined by the first token in the string.

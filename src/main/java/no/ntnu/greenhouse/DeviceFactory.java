@@ -1,6 +1,5 @@
 package no.ntnu.greenhouse;
 
-import java.util.List;
 
 /**
  * A factory for producing sensors and actuators of specific types.
@@ -15,8 +14,6 @@ public class DeviceFactory {
   private static final double NORMAL_GREENHOUSE_HUMIDITY = 80;
   private static final String HUMIDITY_UNIT = "%";
   private static final String SENSOR_TYPE_TEMPERATURE = "temperature";
-  private static int nextNodeId = 1;
-  private static final String SENSOR_NODE_ID = "10";
   private static NodeIdAllocator nodeIdAllocator = new NodeIdAllocator();
 
 
@@ -164,14 +161,4 @@ public class DeviceFactory {
     final double plusMinusD = zeroToDoubleD - d;
     return x + plusMinusD;
   }
-
-  /**
-   * Generate an integer that can be used as a unique ID of sensor/actuator nodes.
-   *
-   * @return a Unique ID for sensor/actuator nodes
-   */
-  private static int generateUniqueNodeId() {
-    return nextNodeId++;
-  }
-
 }
