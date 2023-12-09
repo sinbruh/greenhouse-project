@@ -193,7 +193,8 @@ public class FakeCommunicationChannel implements CommunicationChannel {
 
   @Override
   public void sendGetNodesCommand() {
-    Logger.info("sendGetNodesCommand() does nothing for the fake spawner, all the timers are running already...");
+    Logger.info("sendGetNodesCommand() does nothing for the fake spawner,"
+        + " all the timers are running already...");
   }
 
   @Override
@@ -203,6 +204,7 @@ public class FakeCommunicationChannel implements CommunicationChannel {
 
   @Override
   public void sendBroadcastStateCommand(int id, boolean b) {
-    Logger.info("sendBroadcastStateCommand() does nothing for the fake spawner, all the timers are running already...");
+    Logger.info("sendBroadcastStateCommand() does nothing for the fake spawner,"
+        + " all the timers are running already...");
   }
 }

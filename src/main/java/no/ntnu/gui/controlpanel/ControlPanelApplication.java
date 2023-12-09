@@ -1,5 +1,8 @@
 package no.ntnu.gui.controlpanel;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -23,10 +26,6 @@ import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.controlpanel.GreenhouseEventListener;
 import no.ntnu.tools.Logger;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Run a control panel with a graphical user interface (GUI), with JavaFX.
@@ -197,7 +196,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
    * Callback method that invokes when the state of all
    * the actuators on a node change.
    *
-   * @param nodeID ID of the node where all actuators are located.
+   * @param nodeid ID of the node where all actuators are located.
    * @param isOn   Indicating whether all actuators are in the on state.
    */
   @Override

@@ -7,7 +7,7 @@ import no.ntnu.greenhouse.GreenhouseSimulator;
  */
 public class ServerRunner {
   /**
-   * Starts the server
+   * Starts the server.
    *
    * @param args the argument to the program.
    */

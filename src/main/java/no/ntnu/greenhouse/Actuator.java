@@ -24,7 +24,7 @@ public class Actuator {
    * Create an actuator. An ID will be auto-generated.
    *
    * @param type   The type of the actuator.
-   * @param nodeId ID of the node to which this actuator is connected.
+   * @param actuatornodeId ID of the node to which this actuator is connected.
    */
   public Actuator(String type, int actuatornodeId) {
     this.type = type;

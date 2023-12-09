@@ -19,7 +19,8 @@ public class Sensor {
    * @param unit    The measurement unit. Examples: "%", "C", "lux"
    * @param sensorNodeId The id for the sensor node.
    */
-  public Sensor(String type, double min, double max, double current, String unit, int sensorNodeId) {
+  public Sensor(String type, double min, double max,
+                double current, String unit, int sensorNodeId) {
     this.reading = new SensorReading(type, current, unit);
     this.min = min;
     this.max = max;

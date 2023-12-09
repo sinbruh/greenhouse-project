@@ -1,5 +1,6 @@
 package no.ntnu.run;
 
+import java.net.Socket;
 import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.FakeCommunicationChannel;
@@ -7,8 +8,6 @@ import no.ntnu.controlpanel.RealCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.server.GreenhouseServer;
 import no.ntnu.tools.Logger;
-
-import java.net.Socket;
 
 /**
  * Starter class for the control panel.

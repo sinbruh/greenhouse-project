@@ -4,12 +4,16 @@ import java.util.List;
 import no.ntnu.communication.Message;
 import no.ntnu.greenhouse.Sensor;
 
+/**
+ * Message containing sensor readings.
+ */
 public class SensorReadingMessage extends Message {
   List<Sensor> sensors;
-  String nodeID;
-  public SensorReadingMessage(String nodeID, List<Sensor> sensors) {
+  String nodeid;
+
+  public SensorReadingMessage(String nodeid, List<Sensor> sensors) {
     this.sensors = sensors;
-    this.nodeID = nodeID;
+    this.nodeid = nodeid;
   }
 
   @Override
@@ -17,7 +21,7 @@ public class SensorReadingMessage extends Message {
     StringBuilder builder = new StringBuilder();
     builder.append("sensorReading");
     builder.append("|");
-    builder.append(nodeID);
+    builder.append(nodeid);
     builder.append("|");
 
     for (Sensor sensor : sensors) {

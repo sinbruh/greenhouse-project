@@ -4,7 +4,8 @@ import no.ntnu.greenhouse.GreenhouseSimulator;
 
 /**
  * Represents a command in the communication protocol.
- * This is an abstract class that extends the Message class and should be extended by specific types of commands.
+ * This is an abstract class that extends the Message class,
+ * and should be extended by specific types of commands.
  */
 public abstract class Command extends Message {
 

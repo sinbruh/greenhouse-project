@@ -11,6 +11,9 @@ import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
 
+/**
+ * A real communication channel. Communicates with the server over a TCP connection.
+ */
 public class RealCommunicationChannel extends Thread implements CommunicationChannel {
   private ControlPanelLogic logic;
   private PrintWriter socketWriter;
@@ -108,10 +111,16 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     logic.onActuatorStateChanged(Integer.parseInt(nodeid), Integer.parseInt(actuatorid), stateBool);
   }
 
-  public void parseBroadcastStateMessage(String nodeID, String state) {
+  /**
+   * Parses a broadcast state message.
+   *
+   * @param nodeid The node ID.
+   * @param state  The state of the node.
+   */
+  public void parseBroadcastStateMessage(String nodeid, String state) {
     System.out.println("broadcaststate method");
     boolean stateBool = state.equals("on");
-    logic.onAllActuatorChange(Integer.parseInt(nodeID), stateBool);
+    logic.onAllActuatorChange(Integer.parseInt(nodeid), stateBool);
   }
 
 
@@ -127,8 +136,8 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     String[] sensors = sensorReading.split("/");
     for (String sensor : sensors) {
       String[] sensorTokens = sensor.split(":");
-      sensorReadings.add(new SensorReading
-          (sensorTokens[0], Double.parseDouble(sensorTokens[1]), sensorTokens[2]));
+      sensorReadings.add(
+          new SensorReading(sensorTokens[0], Double.parseDouble(sensorTokens[1]), sensorTokens[2]));
     }
     sensorReadings.forEach(System.out::println);
     return sensorReadings;

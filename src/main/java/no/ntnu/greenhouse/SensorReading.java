@@ -24,7 +24,7 @@ public class SensorReading {
   }
 
   /**
-   * Getter for type of sensor
+   * Getter for type of sensor.
    *
    * @return returns the type of sensor
    */
@@ -42,7 +42,7 @@ public class SensorReading {
   }
 
   /**
-   * Getter for unit measurements
+   * Getter for unit measurements.
    *
    * @return The unit from the sensor reading.
    */

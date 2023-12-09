@@ -1,5 +1,7 @@
 package no.ntnu.gui.common;
 
+import java.util.HashMap;
+import java.util.Map;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,9 +16,6 @@ import javafx.scene.layout.VBox;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.listeners.common.ActuatorListener;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A section of the GUI representing a list of actuators. Can be used both on the sensor/actuator

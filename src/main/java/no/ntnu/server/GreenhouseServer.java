@@ -1,12 +1,11 @@
 package no.ntnu.server;
 
-import no.ntnu.communication.Message;
-import no.ntnu.greenhouse.GreenhouseSimulator;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import no.ntnu.communication.Message;
+import no.ntnu.greenhouse.GreenhouseSimulator;
 
 /**
  * The GreenhouseServer class manages the communication between the GreenhouseSimulator,
@@ -84,10 +83,12 @@ public class GreenhouseServer {
 
   /**
    * Accepts the next incoming client connection on the provided ServerSocket.
-   * If the acceptance of the connection fails, an error message is printed to the standard error stream.
+   * If the acceptance of the connection fails,
+   * an error message is printed to the standard error stream.
    *
    * @param listeningSocket The ServerSocket on which to accept the next client connection.
-   * @return A Socket representing the accepted client connection if successful, or null if an exception occurs.
+   * @return A Socket representing the accepted client connection if successful,
+   *         or null if an exception occurs.
    */
   private Socket acceptNextClientConnection(ServerSocket listeningSocket) {
     Socket clientSocket = null;
