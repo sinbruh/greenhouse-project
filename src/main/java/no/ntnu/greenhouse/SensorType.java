@@ -1,7 +1,15 @@
 package no.ntnu.greenhouse;
 
+/**
+ * Enum representing types of sensors in the greenhouse.
+ */
 public enum SensorType {
+  /**
+   * Represents humidity sensors.
+   */
   HUMIDITY,
-  TEMPERATURE,
-  LIGHT
+  /**
+   * Represents a temperature sensor.
+   */
+  TEMPERATURE
 }

@@ -109,7 +109,6 @@ public class DeviceFactory {
         return createTemperatureSensor();
       case HUMIDITY:
         return createHumiditySensor();
-      // Add more cases for other sensor types if needed
       default:
         throw new IllegalArgumentException("Unsupported sensor type: " + type);
     }

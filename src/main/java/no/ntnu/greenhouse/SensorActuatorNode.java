@@ -33,11 +33,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
 
   private boolean running;
   private final Random random = new Random();
-
-  //Maps to store actuators and sensors by type.
   private final Map<SensorType, List<Sensor>> sensorsByType = new HashMap<>();
-  private final Map<ActuatorType, List<Actuator>> actuatorsByType = new HashMap<>();
-
 
 
   /**
@@ -100,7 +96,6 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
         Sensor sensor = DeviceFactory.createSensorBasedOnType(type);
         sensors.add(sensor);
 
-        // Add sensor to the map based on its type
         sensorsByType.computeIfAbsent(type, k -> new ArrayList<>()).add(sensor);
       }
     }
