@@ -3,6 +3,7 @@ package no.ntnu.greenhouse;
 import java.util.HashMap;
 import java.util.Map;
 import no.ntnu.listeners.common.ActuatorListener;
+import no.ntnu.tools.Logger;
 
 /**
  * An actuator that can change the environment in a way. The actuator will make impact on the
@@ -129,6 +130,11 @@ public class Actuator {
     }
   }
 
+  /**
+   * Returns a string of an actuator object.
+   *
+   * @return A string representation of the actuator.
+   */
   @Override
   public String toString() {
     return "Actuator{"

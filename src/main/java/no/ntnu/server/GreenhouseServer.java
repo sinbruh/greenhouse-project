@@ -41,13 +41,11 @@ public class GreenhouseServer {
      * Start the TCP server for this greenhouse.
      * Some code was reused from previous SmartTV project.
      * @param @controlPanelPort The port of the control panel listening socket.
-     * @param @nodePort The port of the node listening socket.
      */
-    public void startServer(int controlPanelPort, int nodePort) {
+    public void startServer(int controlPanelPort) {
         ServerSocket controlPanelSocket = openListeningSocket(controlPanelPort);
-        ServerSocket nodeSocket = openListeningSocket(nodePort);
 
-        System.out.println("Server listening for node on port " + nodePort);
+        System.out.println("Server listening for node on port " + controlPanelPort);
         if (controlPanelSocket != null) {
             isTcpServerRunning = true;
             while (isTcpServerRunning) {
@@ -57,7 +55,10 @@ public class GreenhouseServer {
                     controlPanels.add(clientSocket);
 
                     ClientHandler clientHandler = new ClientHandler(clientSocket, greenhouseSimulator);
-                    greenhouseSimulator.getNodes().values().forEach(node -> node.addSensorListener(clientHandler));
+                    greenhouseSimulator.getNodes().values().forEach(node -> {
+                        node.addSensorListener(clientHandler);
+                        node.addActuatorListener(clientHandler);
+                    });
                     clientHandler.start();
                 }
             }

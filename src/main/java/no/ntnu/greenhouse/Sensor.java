@@ -1,8 +1,5 @@
 package no.ntnu.greenhouse;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A sensor which can sense the environment in a specific way.
  */
@@ -40,6 +37,11 @@ public class Sensor {
     return sensorNodeId;
   }
 
+  /**
+   * Getter for the sensor type.
+   *
+   * @return A sensor type.
+   */
   public String getType() {
     return reading.getType();
   }
@@ -71,6 +73,11 @@ public class Sensor {
     ensureValueBoundsAndPrecision(newValue);
   }
 
+  /**
+   * Ensures the provided value is inside the specified bounds.
+   *
+   * @param newValue The new value to be checked or rounded.
+   */
   private void ensureValueBoundsAndPrecision(double newValue) {
     newValue = roundToTwoDecimals(newValue);
     if (newValue < min) {
@@ -81,6 +88,12 @@ public class Sensor {
     reading.setValue(newValue);
   }
 
+  /**
+   * Rounds the value to two decimals.
+   *
+   * @param value Value to be rounded.
+   * @return A rounded value with two decimals.
+   */
   private double roundToTwoDecimals(double value) {
     return Math.round(value * 100.0) / 100.0;
   }
@@ -102,6 +115,11 @@ public class Sensor {
     ensureValueBoundsAndPrecision(newValue);
   }
 
+  /**
+   * Returns a string representation of this object.
+   *
+   * @return A string representation.
+   */
   @Override
   public String toString() {
     return reading.toString();

@@ -1,8 +1,6 @@
 package no.ntnu.communication;
 
 import no.ntnu.communication.commands.*;
-import no.ntnu.communication.messages.HumidityMessage;
-import no.ntnu.communication.messages.ListOfNodesMessage;
 import no.ntnu.communication.messages.SensorListMessage;
 import no.ntnu.communication.messages.StateMessage;
 import no.ntnu.communication.messages.TemperatureMessage;
@@ -11,7 +9,7 @@ public class MessageSerializer {
 
   /**
    * Deserializes a string into a Message object. The type of the Message object is determined by the first token in the string.
-   * @param messageString The string to deserialize.
+   * @param rawClientRequest The string to deserialize.
    * @return The deserialized Message object, or null if the string could not be deserialized.
    */
   public static Message fromString(String rawClientRequest) {
@@ -24,10 +22,7 @@ public class MessageSerializer {
       case "getSensors" -> message = new GetListOfSensors(tokens[0]);
       case "getNodes" -> message = new GetListOfNodeInfo();
       case "getValue" -> message = new GetValueCommand(tokens[0], tokens[1]);
-      //Messages
-      case "state" -> message = new StateMessage(tokens[0], tokens[1], tokens[2]);
-      case "sensors" -> message = new SensorListMessage(tokens[0], tokens[1]);
-//      case "nodes" -> message = new ListOfNodesMessage(tokens[0]);
+      case "setBroadcastState" -> message = new BroadCastSetStateCommand(tokens[1], tokens[2]);
     }
 
     return message;

@@ -12,7 +12,7 @@ public class ListOfNodesMessage extends Message {
     this.nodes = nodes;
   }
 
-  // nodes|node1:aid/atype:aid2/atype2|node2:id/type:id2/type2
+  // nodes|node1:aid/atype/on:aid2/atype2|node2/off:id/type:id2/type2
   @Override
   public String messageAsString() {
     StringBuilder builder = new StringBuilder();
@@ -25,6 +25,8 @@ public class ListOfNodesMessage extends Message {
         builder.append(actuator.getId());
         builder.append("/");
         builder.append(actuator.getType());
+        builder.append("/");
+        builder.append(actuator.isOn() ? "on" : "off");
       }
     }
     return builder.toString();

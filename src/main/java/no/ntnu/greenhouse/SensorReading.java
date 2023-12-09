@@ -23,22 +23,47 @@ public class SensorReading {
     this.unit = unit;
   }
 
+  /**
+   * Getter for type of sensor
+   *
+   * @return returns the type of sensor
+   */
   public String getType() {
     return type;
   }
 
+  /**
+   * Getter for value from the sensor reading.
+   *
+   * @return The value from sensor reading.
+   */
   public double getValue() {
     return value;
   }
 
+  /**
+   * Getter for unit measurements
+   *
+   * @return The unit from the sensor reading.
+   */
   public String getUnit() {
     return unit;
   }
 
+  /**
+   * Setter for new value from the sensor reader.
+   *
+   * @param newValue The new value to be set.
+   */
   public void setValue(double newValue) {
     this.value = newValue;
   }
 
+  /**
+   * Returns a string representation of the sensor reading.
+   *
+   * @return A string representation.
+   */
   @Override
   public String toString() {
     return "{ type=" + type + ", value=" + value + ", unit=" + unit + " }";
@@ -53,6 +78,12 @@ public class SensorReading {
     return value + unit;
   }
 
+  /**
+   * Checks if some other object is equal to this object.
+   *
+   * @param o The object to compare.
+   * @return True if the object is the same as the argument o. Returns false otherwise.
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -67,6 +98,11 @@ public class SensorReading {
         && Objects.equals(unit, that.unit);
   }
 
+  /**
+   * Returns a hash value for the sensor reading.
+   *
+   * @return A hash code value for this sensor reading.
+   */
   @Override
   public int hashCode() {
     return Objects.hash(type, value, unit);

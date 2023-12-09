@@ -7,15 +7,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import no.ntnu.communication.commands.GetListOfNodeInfo;
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.DeviceFactory;
-import no.ntnu.greenhouse.Sensor;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
 
 public class RealCommunicationChannel extends Thread implements CommunicationChannel {
-  private Socket socket;
   private ControlPanelLogic logic;
   private PrintWriter socketWriter;
   private BufferedReader socketReader;
@@ -31,13 +27,18 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     socketWriter.println("setState|" + nodeId + "|" + actuatorId + "|" + (isOn ? "on" : "off"));
   }
 
+  public void sendBroadcastStateCommand(int nodeID, boolean state) {
+    Logger.info("setBroadcastState|" + nodeID + "|" + (state ? "on" : "off"));
+    socketWriter.println("setBroadcastState|" + nodeID + "|" + (state ? "on" : "off"));
+  }
+
   /**
-  * Initializes nodes based on the provided tokens. Each token represents a node and its actuators.
-  * @param tokens The tokens representing the nodes and their actuators.
-  */
+   * Initializes nodes based on the provided tokens. Each token represents a node and its actuators.
+   * @param tokens The tokens representing the nodes and their actuators.
+   */
   public void initNodes(String[] tokens) {
     for (int i = 1; i < tokens.length; i++) {
-      System.out.println("Adding node " + tokens[i]);
+      Logger.info("Adding node " + tokens[i]);
 
 
       String[] nodeTokens = tokens[i].split(":");
@@ -47,6 +48,11 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
         for (int j = 1; j < nodeTokens.length; j++) {
           String[] actuatorTokens = nodeTokens[j].split("/");
           nodeInfo.addActuator(new Actuator(Integer.parseInt(actuatorTokens[0]), actuatorTokens[1], nodeId));
+          if (actuatorTokens.length > 2 && actuatorTokens[2].equals("on")) {
+            nodeInfo.getActuator(Integer.parseInt(actuatorTokens[0])).set(true);
+          } else if (actuatorTokens[2].equals("off")) {
+            nodeInfo.getActuator(Integer.parseInt(actuatorTokens[0])).set(false);
+          }
           Logger.info("Added actuator " + actuatorTokens[0] + " to node " + nodeId);
         }
       }
@@ -64,11 +70,9 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
 
   /**
    * Continuously reads responses from the server and handles them based on their type.
-   * Currently handles "sensorReading" and "nodes" messages.
    */
   @Override
   public void run() {
-    //TODO complete implementation
     boolean running = true;
     while (running) {
       String response = readResponse();
@@ -85,6 +89,9 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
         case "state":
           parseStateMessage(tokens[1], tokens[2], tokens[3]);
           break;
+        case "broadCastState":
+          parseBroadcastStateMessage(tokens[1], tokens[2]);
+          break;
       }
       running = !(response == null);
     }
@@ -94,6 +101,13 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     boolean stateBool = state.equals("on");
     logic.onActuatorStateChanged(Integer.parseInt(nodeID), Integer.parseInt(actuatorID), stateBool);
   }
+
+  public void parseBroadcastStateMessage(String nodeID, String state) {
+    System.out.println("broadcaststate method");
+    boolean stateBool = state.equals("on");
+    logic.onAllActuatorChange(Integer.parseInt(nodeID), stateBool);
+  }
+
 
   /**
    * Parses a sensor reading string into a list of SensorReading objects.
@@ -137,11 +151,10 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   }
 
   /**
-   * Sets the socket for this communication channel and initializes the input and output streams.
+   * Initializes the input and output streams for this communication channel.
    * @param socket The socket to set for this communication channel.
    */
-  public void setSocket(Socket socket) {
-    this.socket = socket;
+  public void initializeStreams(Socket socket) {
     try {
       socketWriter = new PrintWriter(socket.getOutputStream(), true);
       socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));

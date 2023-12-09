@@ -61,12 +61,18 @@ public class ActuatorPane extends TitledPane {
     SimpleBooleanProperty isSelected = new SimpleBooleanProperty(actuator.isOn());
     actuatorActive.put(actuator, isSelected);
     button.setOnAction((actionEvent) -> {
-          actuator.toggle();
-          isSelected.set(actuator.isOn());
-        });
+      actuator.toggle();
+      isSelected.set(actuator.isOn());
+    });
     return button;
   }
 
+  /**
+   * Method that adds actuator listener to receive updates when
+   * the state of an actuator changes.
+   *
+   * @param actuatorListener
+   */
   public void addActuatorListener(ActuatorListener actuatorListener) {
     actuatorActive.forEach((actuator, isSelected) ->
         isSelected.addListener((observable, oldValue, newValue) -> {

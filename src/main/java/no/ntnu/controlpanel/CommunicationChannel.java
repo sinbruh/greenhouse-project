@@ -25,4 +25,6 @@ public interface CommunicationChannel {
   void sendGetNodesCommand();
 
   void start();
+
+  void sendBroadcastStateCommand(int id, boolean b);
 }
