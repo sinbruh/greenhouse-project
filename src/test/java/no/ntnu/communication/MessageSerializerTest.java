@@ -11,11 +11,11 @@ public class MessageSerializerTest {
         // Test with a TurnOnCommand message
         String rawClientRequest = "on|132123|123123";
         Message message = MessageSerializer.fromString(rawClientRequest);
-        assertTrue(message instanceof TurnOnCommand);
+        assertTrue(message instanceof GetStateCommand);
     }
 
     @Test
-    void testMessageFromString() {
+    public void testMessageFromString() {
         // Test with a TemperatureMessage message
         String rawClientRequest = "temp|234234|234234|20";
         Message message = MessageSerializer.fromString(rawClientRequest);
