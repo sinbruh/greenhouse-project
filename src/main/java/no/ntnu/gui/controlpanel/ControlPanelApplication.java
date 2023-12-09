@@ -64,6 +64,11 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     launch();
   }
 
+  /**
+   * Method to start the control panel stage.
+   *
+   * @param stage The control panel stage to start.
+   */
   @Override
   public void start(Stage stage) {
     if (channel == null) {
@@ -98,12 +103,24 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     return vBox;
   }
 
+  /**
+   * This method gives a callback when a new
+   * sensorActuatorNode is added to the system.
+   *
+   * @param nodeInfo Information about the added node.
+   */
   @Override
   public void onNodeAdded(SensorActuatorNodeInfo nodeInfo) {
     System.out.println("Node added: " + nodeInfo.getId());
     Platform.runLater(() -> addNodeTab(nodeInfo));
   }
 
+  /**
+   * Callback method that initiates when a
+   * sensorActuatorNode is removed.
+   *
+   * @param nodeId ID of the node which has disappeared (removed)
+   */
   @Override
   public void onNodeRemoved(int nodeId) {
     Tab nodeTab = nodeTabs.get(nodeId);
@@ -121,11 +138,20 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     }
   }
 
+  /**
+   * Removes the node tab scene from the main scene.
+   */
   private void removeNodeTabPane() {
     mainScene.setRoot(createEmptyContent());
     nodeTabPane = null;
   }
 
+  /**
+   * Callback method that is initiates when sensor data is received from a node.
+   *
+   * @param nodeId  ID of the node
+   * @param sensors List of all current sensor values
+   */
   @Override
   public void onSensorData(int nodeId, List<SensorReading> sensors) {
     Logger.info("Sensor data from node " + nodeId);
@@ -139,6 +165,13 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     }
   }
 
+  /**
+   * Callback method that initiates when an actuator changes on a node.
+   *
+   * @param nodeId ID of the node to which the actuator is attached.
+   * @param actuatorId ID of the actuator whose state changes.
+   * @param isOn  When true, actuator is on; off when false.
+   */
   @Override
   public void onActuatorStateChanged(int nodeId, int actuatorId, boolean isOn) {
     String state = isOn ? "ON" : "off";
@@ -161,6 +194,13 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     }
   }
 
+  /**
+   * Callback method that invokes when the state of all
+   * the actuators on a node change.
+   *
+   * @param nodeID ID of the node where all actuators are located.
+   * @param isOn Indicating whether all actuators are in the on state.
+   */
   @Override
   public void onAllActuatorChange(int nodeID, boolean isOn) {
     for (Actuator actuator : nodeInfos.get(nodeID).getActuators()) {
@@ -169,6 +209,13 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     }
   }
 
+  /**
+   * Retrieves the stored actuators.
+   *
+   * @param nodeId ID of the node.
+   * @param actuatorId ID of the actuator.
+   * @return Returns the corresponding actuator to the specified node.
+   */
   private Actuator getStoredActuator(int nodeId, int actuatorId) {
     Actuator actuator = null;
     SensorActuatorNodeInfo nodeInfo = nodeInfos.get(nodeId);
@@ -178,17 +225,35 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     return actuator;
   }
 
+  /**
+   * Removes information about a node.
+   *
+   * @param nodeId ID of the node to forget.
+   */
   private void forgetNodeInfo(int nodeId) {
     sensorPanes.remove(nodeId);
     actuatorPanes.remove(nodeId);
     nodeInfos.remove(nodeId);
   }
 
+  /**
+   * Removes a node tab identified by its ID from the nodeTabs.
+   *
+   * @param nodeId  The ID of the node whose tab is to be removed.
+   * @param nodeTab The Tab object representing the node tab to be removed.
+   *
+   */
   private void removeNodeTab(int nodeId, Tab nodeTab) {
     nodeTab.getTabPane().getTabs().remove(nodeTab);
     nodeTabs.remove(nodeId);
   }
 
+  /**
+   * Adds a new node tab to the TabPane in the GUI,
+   * creating a new SensorActuatorNodeInfo if it does not exist.
+   *
+   * @param nodeInfo The sensorActuatorNode representing information.
+   */
   private void addNodeTab(SensorActuatorNodeInfo nodeInfo) {
     if (nodeTabPane == null) {
       nodeTabPane = new TabPane();
@@ -203,6 +268,12 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     }
   }
 
+  /**
+   * Creates a new Tab for a node with the specified SensorActuatorNodeInfo.
+   *
+   * @param nodeInfo The SensorActuatorNodeInfo representing information about the node.
+   * @return The created tab object.
+   */
   private Tab createNodeTab(SensorActuatorNodeInfo nodeInfo) {
     Tab tab = new Tab("Node " + nodeInfo.getId());
     SensorPane sensorPane = createEmptySensorPane();
@@ -216,6 +287,12 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     return tab;
   }
 
+  /**
+   * Creates a toolbar for controlling all actuators.
+   *
+   * @param nodeInfo The SensorActuatorNodeInfo representing information about the node.
+   * @return The created HBox representing the toolbar.
+   */
   private HBox createToolBar(SensorActuatorNodeInfo nodeInfo) {
     HBox toolBar = new HBox();
     toolBar.setSpacing(10);
@@ -228,16 +305,30 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     return toolBar;
   }
 
+  /**
+   * Creates an empty sensorPane.
+   *
+   * @return An instance of sensorPane.
+   */
   private static SensorPane createEmptySensorPane() {
     return new SensorPane();
   }
 
+  /**
+   * Callback method that invokes when communication is closed.
+   */
   @Override
   public void onCommunicationChannelClosed() {
     Logger.info("Communication closed, closing the GUI");
     Platform.runLater(Platform::exit);
   }
 
+  /**
+   * Callback method that invokes when a actuator is updated.
+   *
+   * @param nodeId   ID of the node on which this actuator is placed.
+   * @param actuator The actuator that has changed its state.
+   */
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
     channel.sendActuatorChange(nodeId, actuator.getId(), actuator.isOn());
