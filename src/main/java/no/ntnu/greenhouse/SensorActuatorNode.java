@@ -338,9 +338,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param sensorNodeId
    * @return The sensor, or null if no sensor with the given ID is found
    */
-  public Sensor getSensor(String sensorNodeId) {
+  public Sensor getSensor(int sensorNodeId) {
     for (Sensor sensor : this.sensors) {
-        if (sensor.getSensorNodeId().equals(sensorNodeId)) {
+        if (sensor.getSensorNodeId() == sensorNodeId) {
             return sensor;
         }
     }
