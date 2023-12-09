@@ -85,7 +85,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * This method lets you add sensors with specified types.
    *
    * @param types Types of sensors.
-   * @param n The number of sensors to add to the node.
+   * @param n     The number of sensors to add to the node.
    */
   public void addSensors2(List<SensorType> types, int n) {
     if (types == null || types.isEmpty()) {
@@ -341,9 +341,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    */
   public Sensor getSensor(int sensorNodeId) {
     for (Sensor sensor : this.sensors) {
-        if (sensor.getSensorNodeId() == sensorNodeId) {
-            return sensor;
-        }
+      if (sensor.getSensorNodeId() == sensorNodeId) {
+        return sensor;
+      }
     }
     return null; // Return null if no sensor with the matching ID is found
   }

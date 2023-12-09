@@ -9,17 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.SensorReading;
+import no.ntnu.server.GreenhouseServer;
 import no.ntnu.tools.Logger;
+import no.ntnu.tools.Parser;
 
 /**
  * A real communication channel. Communicates with the server over a TCP connection.
  */
 public class RealCommunicationChannel extends Thread implements CommunicationChannel {
+  private static final int MAX_RECONNECT_ATTEMPTS = 5;
+  private static final long RECONNECT_DELAY_MS = 5000;
+  private Socket socket;
   private ControlPanelLogic logic;
   private PrintWriter socketWriter;
   private BufferedReader socketReader;
   private boolean isOpen;
-    private Socket socket;
 
   public RealCommunicationChannel(ControlPanelLogic logic) {
     this.logic = logic;
@@ -48,7 +52,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
 
 
       String[] nodeTokens = tokens[i].split(":");
-      int nodeId = Integer.parseInt(nodeTokens[0]);
+      int nodeId = Parser.parseIntegerOrError(nodeTokens[0], "Could not initialize nodes, invalid nodeid");
       SensorActuatorNodeInfo nodeInfo = new SensorActuatorNodeInfo(nodeId);
       if (nodeTokens.length > 1) {
         for (int j = 1; j < nodeTokens.length; j++) {
@@ -83,6 +87,16 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     boolean running = true;
     while (running) {
       String response = readResponse();
+
+      if (response == null) {
+        reconnect();
+        response = readResponse();
+        if (response == null) {
+          running = false;
+          continue;
+        }
+      }
+
       String[] tokens = response.split("\\|");
       Logger.info("Received message: " + response);
 
@@ -105,6 +119,26 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
       }
       running = !(response == null);
     }
+  }
+
+  /**
+   * Reconnects to the server. A lot of code in this method was repurposed from AI generated.
+   */
+  private void reconnect() {
+    for (int attempt = 1; attempt <= MAX_RECONNECT_ATTEMPTS; attempt++) {
+      try {
+        Thread.sleep(RECONNECT_DELAY_MS);
+        initializeStreams(new Socket("localhost", GreenhouseServer.CONTROL_PANEL_PORT));
+        sendGetNodesCommand();
+        isOpen = true;
+        Logger.info("Reconnected to the server on attempt " + attempt);
+        return;
+      } catch (IOException | InterruptedException e) {
+        Logger.error("Reconnection attempt " + attempt + " failed");
+      }
+    }
+    Logger.error("Failed to reconnect after " + MAX_RECONNECT_ATTEMPTS + " attempts");
+
   }
 
   public void parseStateMessage(String nodeid, String actuatorid, String state) {
