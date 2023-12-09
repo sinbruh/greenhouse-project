@@ -30,7 +30,7 @@ public class Actuator {
     this.type = type;
     this.nodeId = actuatornodeId;
     this.on = false;
-    this.id = nodeId;
+    this.id = generateUniqueId();
   }
 
   /**
