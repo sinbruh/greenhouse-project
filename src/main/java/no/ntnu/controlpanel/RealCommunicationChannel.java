@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import no.ntnu.communication.commands.GetListOfNodes;
+import no.ntnu.communication.commands.GetListOfNodeInfo;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.DeviceFactory;
 import no.ntnu.greenhouse.Sensor;
@@ -150,4 +150,18 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
       System.err.println("could not initialize stream");
     }
   }
+
+    /**
+     * Closes the socket for this communication channel.
+     */
+    public void closeSocket() {
+      try {
+        if (socket !=null && !socket.isClosed()) {
+          socket.close();
+          System.out.println("Socket closed");
+        }
+      } catch (IOException e) {
+        System.err.println("Could not close socket" + e.getMessage());
+      }
+    }
 }

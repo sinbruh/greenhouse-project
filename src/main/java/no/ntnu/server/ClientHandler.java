@@ -4,7 +4,8 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.prefs.NodeChangeEvent;
 import java.util.prefs.NodeChangeListener;
-import no.ntnu.communication.commands.GetListOfNodes;
+
+import no.ntnu.communication.commands.GetListOfNodeInfo;
 import no.ntnu.communication.messages.SensorReadingMessage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.communication.Message;
@@ -25,6 +26,7 @@ import no.ntnu.listeners.greenhouse.SensorListener;
  */
 public class ClientHandler extends Thread implements NodeStateListener, NodeChangeListener,
     SensorListener {
+    private ConnectionManager connectionManager;
     private BufferedReader socketReader;
     private Socket clientSocket;
     private GreenhouseSimulator simulator;
@@ -38,6 +40,7 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
      * @param simulator The GreenhouseSimulator associated with the server.
      */
     public ClientHandler(Socket clientSocket, GreenhouseSimulator simulator) {
+        this.connectionManager = new ConnectionManager(clientSocket);
         this.clientSocket = clientSocket;
         this.simulator = simulator;
         readyToReceive = false;
@@ -65,9 +68,12 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
      * processes corresponding commands, and sends responses back to the client.
      */
     public void run() {
-        if (!initializeStreams()) {
-            return;
+        while (!connectionManager.isConnected() || !connectionManager.initializeStreams()) {
+            System.err.println("Connection lost. Reconnecting...");
+            connectionManager.reconnect();
         }
+
+        connectionManager.getSocketWriter();
 
         System.out.println("handling new client on " + Thread.currentThread().getName());
 
@@ -81,7 +87,7 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
 
             System.out.println("Recieved from client: " + clientCommand);
 
-            if (clientCommand instanceof GetListOfNodes) {
+            if (clientCommand instanceof GetListOfNodeInfo) {
                 readyToReceive = true;
             }
 
@@ -108,12 +114,12 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
     private Command readClientRequest() {
         Message clientCommand = null;
         try {
-            String rawClientRequest = socketReader.readLine();
-            System.out.println("Recieved from client: " + rawClientRequest);
+            String rawClientRequest = connectionManager.getSocketReader().readLine();
+            System.out.println("Received from client: " + rawClientRequest);
             clientCommand = MessageSerializer.fromString(rawClientRequest);
 
             if (!(clientCommand instanceof Command)) {
-                System.err.println("Invalid message recieved");
+                System.err.println("Invalid message received");
                 clientCommand = null;
             }
         } catch (IOException e) {
@@ -128,8 +134,8 @@ public class ClientHandler extends Thread implements NodeStateListener, NodeChan
      * @param response The Message object to be sent as a response to the client.
      */
     private void sendResponseToClient(Message response) {
-            socketWriter.println(MessageSerializer.toString(response));
-            System.out.println("Sent response to " + clientSocket.getRemoteSocketAddress());
+            connectionManager.getSocketWriter().println(MessageSerializer.toString(response));
+            System.out.println("Sent response to " + connectionManager.clientSocket.getRemoteSocketAddress());
     }
 
     @Override
