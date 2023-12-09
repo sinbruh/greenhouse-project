@@ -98,9 +98,14 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     listeners.forEach(listener -> listener.onActuatorStateChanged(nodeId, actuatorId, isOn));
   }
 
+  /**
+   * Callback method that invokes when all actuators on a node changes.
+   *
+   * @param nodeid The ID of the node.
+   * @param isOn A boolean indicating whether all actuators are in the 'on' state.
+   */
   @Override
   public void onAllActuatorChange(int nodeid, boolean isOn) {
-    System.out.println("TEST___________________________________________");
     listeners.forEach(listener -> listener.onAllActuatorChange(nodeid, isOn));
   }
 

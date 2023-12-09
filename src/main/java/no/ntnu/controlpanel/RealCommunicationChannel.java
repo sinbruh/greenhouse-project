@@ -168,7 +168,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
    * @param state  The state of the node.
    */
   public void parseBroadcastStateMessage(String nodeid, String state) {
-    System.out.println("broadcaststate method");
+    Logger.info("broadcaststate method");
     boolean stateBool = state.equals("on");
     logic.onAllActuatorChange(Parser.parseIntegerOrError(nodeid,
             "Could not parse nodeid in parseBroadCastMessage"),
@@ -183,7 +183,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
    * @return A list of SensorReading objects representing the parsed sensor readings.
    */
   public List<SensorReading> parseSensorReading(String sensorReading) {
-    System.out.println("Parsing sensor reading: " + sensorReading);
+    Logger.info("Parsing sensor reading: " + sensorReading);
     ArrayList<SensorReading> sensorReadings = new ArrayList<>();
     String[] sensors = sensorReading.split("/");
     for (String sensor : sensors) {
@@ -191,7 +191,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
       sensorReadings.add(
           new SensorReading(sensorTokens[0], Double.parseDouble(sensorTokens[1]), sensorTokens[2]));
     }
-    sensorReadings.forEach(System.out::println);
+    sensorReadings.forEach(SensorReading -> Logger.info(SensorReading.toString()));
     return sensorReadings;
   }
 
@@ -215,7 +215,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     try {
       response = socketReader.readLine();
     } catch (IOException e) {
-      System.err.println("Could not read response from server");
+      Logger.info("Could not read response from server");
     }
     return response;
   }
@@ -232,7 +232,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
       socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       isOpen = true;
     } catch (IOException e) {
-      System.err.println("could not initialize stream");
+      Logger.info("could not initialize stream");
     }
   }
 

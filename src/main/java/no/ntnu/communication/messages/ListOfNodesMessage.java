@@ -21,7 +21,13 @@ public class ListOfNodesMessage extends Message {
     this.nodes = nodes;
   }
 
-  // nodes|node1:aid/atype/on:aid2/atype2|node2/off:id/type:id2/type2
+    /**
+     * Converts the state of the SensorActuatorNode instance in the collection to
+     * a formatted string that represents the node's "message" type that contains the
+     * information about the nodes.
+     *
+     * @return a string representing the node's "message" type, containing info about the nodes.
+     */
   @Override
   public String messageAsString() {
     StringBuilder builder = new StringBuilder();
