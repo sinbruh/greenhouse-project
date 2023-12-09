@@ -62,7 +62,7 @@ public class ControlPanelStarter {
     RealCommunicationChannel communicationChannel = new RealCommunicationChannel(logic);
     try {
       Socket socket = new Socket("localhost", GreenhouseServer.CONTROL_PANEL_PORT);
-      communicationChannel.setSocket(socket);
+      communicationChannel.initializeStreams(socket);
       logic.setCommunicationChannel(communicationChannel);
     } catch (Exception e) {
       Logger.error("Failed to start socket communication: " + e.getMessage());

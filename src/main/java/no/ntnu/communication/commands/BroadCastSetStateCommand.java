@@ -7,10 +7,11 @@ import no.ntnu.communication.messages.BroadCastStateMessage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 
 public class BroadCastSetStateCommand extends Command {
-  private String nodeID;
-  private String state;
-  public BroadCastSetStateCommand(String nodeID, String state) {
-    this.nodeID = nodeID;
+  private final String nodeid;
+  private final String state;
+
+  public BroadCastSetStateCommand(String nodeid, String state) {
+    this.nodeid = nodeid;
     this.state = state;
   }
 
@@ -21,7 +22,8 @@ public class BroadCastSetStateCommand extends Command {
 
   @Override
   public Message execute(GreenhouseSimulator simulator) {
-    simulator.getNodes().get(Integer.parseInt(nodeID)).getActuators().forEach(actuator -> actuator.set(state.equals("on")));
-    return new BroadCastStateMessage(nodeID, state);
+    simulator.getNodes().get(Integer.parseInt(nodeid)).getActuators().forEach(
+        actuator -> actuator.set(state.equals("on")));
+    return new BroadCastStateMessage(nodeid, state);
   }
 }

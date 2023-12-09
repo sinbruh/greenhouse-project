@@ -57,6 +57,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
 
   /**
    * Notifies all listeners that a new node has been added.
+   *
    * @param nodeInfo The information about the added node.
    */
   @Override
@@ -66,6 +67,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
 
   /**
    * Notifies all listeners that a node has been removed.
+   *
    * @param nodeId The ID of the removed node.
    */
   @Override
@@ -75,6 +77,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
 
   /**
    * Notifies all listeners that new sensor data has been received.
+   *
    * @param nodeId The ID of the node that the sensor data belongs to.
    * @param sensors The received sensor data.
    */
@@ -85,6 +88,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
 
   /**
    * Notifies all listeners that the state of an actuator has changed.
+   *
    * @param nodeId The ID of the node that the actuator belongs to.
    * @param actuatorId The ID of the actuator whose state has changed.
    * @param isOn The new state of the actuator.
@@ -95,13 +99,14 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
   }
 
   @Override
-  public void onAllActuatorChange(int nodeID, boolean isOn) {
+  public void onAllActuatorChange(int nodeid, boolean isOn) {
     System.out.println("TEST___________________________________________");
-    listeners.forEach(listener -> listener.onAllActuatorChange(nodeID, isOn));
+    listeners.forEach(listener -> listener.onAllActuatorChange(nodeid, isOn));
   }
 
   /**
    * Updates the state of an actuator and notifies all listeners about the change.
+   *
    * @param nodeId The ID of the node that the actuator belongs to.
    * @param actuator The actuator whose state has been updated.
    */

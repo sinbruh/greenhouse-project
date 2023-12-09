@@ -91,11 +91,11 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     Button requestNodesButton = new Button("Request nodes");
     requestNodesButton.setOnAction(event -> channel.sendGetNodesCommand());
 
-    VBox vBox = new VBox(l, requestNodesButton);
-    vBox.setAlignment(Pos.CENTER);
-    vBox.setSpacing(10);
+    VBox content = new VBox(l, requestNodesButton);
+    content.setAlignment(Pos.CENTER);
+    content.setSpacing(10);
 
-    return vBox;
+    return content;
   }
 
   @Override
@@ -162,10 +162,10 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   }
 
   @Override
-  public void onAllActuatorChange(int nodeID, boolean isOn) {
-    for (Actuator actuator : nodeInfos.get(nodeID).getActuators()) {
-      Logger.info("actuator[" + actuator.getId() + "] on node " + nodeID + " is " + isOn);
-      onActuatorStateChanged(nodeID, actuator.getId(), isOn);
+  public void onAllActuatorChange(int nodeid, boolean isOn) {
+    for (Actuator actuator : nodeInfos.get(nodeid).getActuators()) {
+      Logger.info("actuator[" + actuator.getId() + "] on node " + nodeid + " is " + isOn);
+      onActuatorStateChanged(nodeid, actuator.getId(), isOn);
     }
   }
 
@@ -204,13 +204,14 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   }
 
   private Tab createNodeTab(SensorActuatorNodeInfo nodeInfo) {
-    Tab tab = new Tab("Node " + nodeInfo.getId());
     SensorPane sensorPane = createEmptySensorPane();
     sensorPanes.put(nodeInfo.getId(), sensorPane);
     ActuatorPane actuatorPane = new ActuatorPane(nodeInfo.getActuators());
     actuatorPane.addActuatorListener(this);
     actuatorPanes.put(nodeInfo.getId(), actuatorPane);
     HBox toolbar = createToolBar(nodeInfo);
+
+    Tab tab = new Tab("Node " + nodeInfo.getId());
     tab.setContent(new VBox(sensorPane, actuatorPane, toolbar));
     nodeTabs.put(nodeInfo.getId(), tab);
     return tab;
@@ -222,7 +223,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     toolBar.setAlignment(Pos.CENTER);
     Button allOnButton = new Button("All on");
     Button allOffButton = new Button("All off");
-    allOnButton.setOnAction(event -> channel.sendBroadcastStateCommand(nodeInfo.getId(),true));
+    allOnButton.setOnAction(event -> channel.sendBroadcastStateCommand(nodeInfo.getId(), true));
     allOffButton.setOnAction(event -> channel.sendBroadcastStateCommand(nodeInfo.getId(), false));
     toolBar.getChildren().addAll(allOnButton, allOffButton);
     return toolBar;

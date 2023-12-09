@@ -61,9 +61,9 @@ public class ActuatorPane extends TitledPane {
     SimpleBooleanProperty isSelected = new SimpleBooleanProperty(actuator.isOn());
     actuatorActive.put(actuator, isSelected);
     button.setOnAction((actionEvent) -> {
-          actuator.toggle();
-          isSelected.set(actuator.isOn());
-        });
+      actuator.toggle();
+      isSelected.set(actuator.isOn());
+    });
     return button;
   }
 
