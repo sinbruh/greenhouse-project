@@ -16,6 +16,7 @@ import no.ntnu.tools.Logger;
  */
 public class ControlPanelStarter {
   private final boolean fake;
+  private CommunicationChannel channel;
 
   public ControlPanelStarter(boolean fake) {
     this.fake = fake;
@@ -99,6 +100,9 @@ public class ControlPanelStarter {
   }
 
   private void stopCommunication() {
+    if (channel instanceof RealCommunicationChannel realChannel) {
+      realChannel.closeSocket();
+    }
     // TODO - here you stop the TCP/UDP socket communication
   }
 }

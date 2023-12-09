@@ -19,6 +19,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   private PrintWriter socketWriter;
   private BufferedReader socketReader;
   private boolean isOpen;
+    private Socket socket;
 
   public RealCommunicationChannel(ControlPanelLogic logic) {
     this.logic = logic;
@@ -175,6 +176,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
    */
   public void initializeStreams(Socket socket) {
     try {
+      this.socket = socket;
       socketWriter = new PrintWriter(socket.getOutputStream(), true);
       socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       isOpen = true;
@@ -182,4 +184,22 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
       System.err.println("could not initialize stream");
     }
   }
+
+    /**
+     * Closes the socket for this communication channel.
+     */
+    public void closeSocket() {
+      try {
+        if (socket !=null && !socket.isClosed()) {
+          socketWriter.println("Disconnect");
+            socket.close();
+            isOpen = false;
+            Logger.info("Socket closed");
+        } else {
+          Logger.info("Socket already closed");
+        }
+      } catch (IOException e) {
+        Logger.error("Could not close socket" + e.getMessage());
+      }
+    }
 }

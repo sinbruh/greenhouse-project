@@ -300,6 +300,14 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     allOnButton.setOnAction(event -> channel.sendBroadcastStateCommand(nodeInfo.getId(), true));
     allOffButton.setOnAction(event -> channel.sendBroadcastStateCommand(nodeInfo.getId(), false));
     toolBar.getChildren().addAll(allOnButton, allOffButton);
+
+    Button disconnectButton = new Button("Disconnect");
+    disconnectButton.setOnAction(event -> {
+      if (channel instanceof RealCommunicationChannel) {
+        ((RealCommunicationChannel) channel).closeSocket();
+      }
+    });
+    toolBar.getChildren().add(disconnectButton);
     return toolBar;
   }
 
