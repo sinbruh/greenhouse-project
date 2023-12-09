@@ -40,10 +40,10 @@ public class SetStateCommand extends Command {
   @Override
   public Message execute(GreenhouseSimulator simulator) {
     Actuator actuator = simulator.getNodes()
-        .get(Parser.parseIntegerOrError(nodeid, "Could not execute command, nodeid is invalid"))
+        .get(Parser.parseIntegerOrError(nodeid, "Could not execute command, node-id is invalid"))
         .getActuators()
         .get(Parser.parseIntegerOrError(actuatorid,
-            "Could not execute command, actuatorid is invalid"));
+            "Could not execute command, actuator-id is invalid"));
     if (value.equals("on")) {
       actuator.turnOn();
     } else if (value.equals("off")) {
@@ -51,8 +51,8 @@ public class SetStateCommand extends Command {
     } else {
       return new ErrorMessage("error: invalid value in setState command");
     }
-    return new StateMessage(Parser.parseIntegerOrError(nodeid, "Could not parse nodeid"),
-        Parser.parseIntegerOrError(actuatorid, "Could not parse actuatorid"),
+    return new StateMessage(Parser.parseIntegerOrError(nodeid, "Could not parse node-id"),
+        Parser.parseIntegerOrError(actuatorid, "Could not parse actuator-id"),
         actuator.isOn());
   }
 
