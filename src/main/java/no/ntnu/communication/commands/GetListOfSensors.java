@@ -10,28 +10,29 @@ import no.ntnu.greenhouse.SensorActuatorNode;
 /**
  * Represents a command to retrieve a list of sensors from a node.
  * Extends the Command class and implements the execute method and messageAsString method.
- *
  */
 public class GetListOfSensors extends Command {
-    String sensorNodeID;
+  String nodeid;
 
   /**
    * Constructor for the GetListOfSensors class.
-   * @param sensorNodeID ID of sensor-node
+   *
+   * @param sensoreNodeid ID of sensor-node
    */
-  public GetListOfSensors(String sensorNodeID) {
-    this.sensorNodeID = sensorNodeID;
+  public GetListOfSensors(String sensoreNodeid) {
+    this.nodeid = sensoreNodeid;
   }
 
   /**
    * Executes the command to retrieve a list of sensors from a node. Returns the number of
    * sensors in the given node.
+   *
    * @param simulator GreenhouseSimulator instance.
    * @return Message containing information about the number of sensors in the node.
    */
   @Override
   public Message execute(GreenhouseSimulator simulator) {
-    SensorActuatorNode node = simulator.getNodes().get(Integer.parseInt(sensorNodeID));
+    SensorActuatorNode node = simulator.getNodes().get(Integer.parseInt(nodeid));
     if (node != null) {
       StringBuilder builder = new StringBuilder();
       builder.append("sensors");
@@ -47,6 +48,7 @@ public class GetListOfSensors extends Command {
 
   /**
    * Returns the message as a string.
+   *
    * @return the message as a string.
    */
   @Override

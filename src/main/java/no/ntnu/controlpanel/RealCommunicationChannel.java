@@ -12,7 +12,6 @@ import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
 
 public class RealCommunicationChannel extends Thread implements CommunicationChannel {
-  private Socket socket;
   private ControlPanelLogic logic;
   private PrintWriter socketWriter;
   private BufferedReader socketReader;
@@ -34,9 +33,9 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   }
 
   /**
-  * Initializes nodes based on the provided tokens. Each token represents a node and its actuators.
-  * @param tokens The tokens representing the nodes and their actuators.
-  */
+   * Initializes nodes based on the provided tokens. Each token represents a node and its actuators.
+   * @param tokens The tokens representing the nodes and their actuators.
+   */
   public void initNodes(String[] tokens) {
     for (int i = 1; i < tokens.length; i++) {
       Logger.info("Adding node " + tokens[i]);
@@ -74,7 +73,6 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
    */
   @Override
   public void run() {
-    //TODO complete implementation
     boolean running = true;
     while (running) {
       String response = readResponse();
@@ -153,11 +151,10 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   }
 
   /**
-   * Sets the socket for this communication channel and initializes the input and output streams.
+   * Initializes the input and output streams for this communication channel.
    * @param socket The socket to set for this communication channel.
    */
-  public void setSocket(Socket socket) {
-    this.socket = socket;
+  public void initializeStreams(Socket socket) {
     try {
       socketWriter = new PrintWriter(socket.getOutputStream(), true);
       socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));

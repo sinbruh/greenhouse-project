@@ -100,8 +100,8 @@ public class DeviceFactory {
   /**
    * Creates a new sensor based on specified sensor type.
    *
-   * @param type
-   * @return
+   * @param type The type of sensor to create.
+   * @return A new sensor of the specified type.
    */
   public static Sensor createSensorBasedOnType(SensorType type) {
     switch (type) {

@@ -7,19 +7,21 @@ package no.ntnu.communication;
  */
 public class ErrorMessage extends Message {
 
-    /**
-     * Constructs an ErrorMessage object.
-     * @param message The error message string.
-     */
-    public ErrorMessage(String message) {
-        super();
-    }
+  /**
+   * Constructs an ErrorMessage object.
+   *
+   * @param message The error message string.
+   */
+  public ErrorMessage(String message) {
+    super();
+  }
 
-    /**
-     * Converts this error message into a string representation.
-     * @return The string representation of this error message, which is always "error".
-     */
-    public String messageAsString() {
-        return "error";
-    }
+  /**
+   * Converts this error message into a string representation.
+   *
+   * @return The string representation of this error message, which is always "error".
+   */
+  public String messageAsString() {
+    return "error";
+  }
 }

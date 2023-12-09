@@ -12,6 +12,7 @@ public class GetListOfNodeInfo extends Command {
 
   /**
    * Execute the command. Returns a ListOfNodesMessage containing a list of all nodes in the system.
+   *
    * @param simulator GreenhouseSimulator instance
    * @return ListOfNodesMessage containing a
    */
@@ -22,6 +23,7 @@ public class GetListOfNodeInfo extends Command {
 
   /**
    * Returns the message as a string.
+   *
    * @return the message as a string.
    */
   @Override
