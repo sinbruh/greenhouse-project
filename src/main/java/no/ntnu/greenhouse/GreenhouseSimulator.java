@@ -1,14 +1,10 @@
 package no.ntnu.greenhouse;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
-import no.ntnu.server.GreenhouseServer;
 import no.ntnu.tools.Logger;
 
 /**
@@ -19,7 +15,6 @@ public class GreenhouseSimulator {
 
   private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>();
   private final boolean fake;
-  private GreenhouseServer server;
 
   /**
    * Create a greenhouse simulator.
@@ -110,15 +105,6 @@ public class GreenhouseSimulator {
     for (SensorActuatorNode node : nodes.values()) {
       node.addStateListener(listener);
     }
-  }
-
-  /**
-   * Sets the server of this greenhouse.
-   *
-   * @param greenhouseServer the server of this greenhouse
-   */
-  public void setServer(GreenhouseServer greenhouseServer) {
-    this.server = greenhouseServer;
   }
 
   /**

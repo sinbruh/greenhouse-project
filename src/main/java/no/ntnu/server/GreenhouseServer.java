@@ -34,7 +34,6 @@ public class GreenhouseServer {
    */
   public void startGreenhouse() {
     greenhouseSimulator.initialize();
-    greenhouseSimulator.setServer(this);
     greenhouseSimulator.start();
   }
 

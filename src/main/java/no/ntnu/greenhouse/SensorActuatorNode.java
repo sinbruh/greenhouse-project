@@ -1,7 +1,7 @@
 package no.ntnu.greenhouse;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
 
   private boolean running;
   private final Random random = new Random();
-  private final Map<SensorType, List<Sensor>> sensorsByType = new HashMap<>();
+  private final Map<SensorType, List<Sensor>> sensorsByType = new EnumMap<>(SensorType.class);
 
 
   /**
