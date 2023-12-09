@@ -1,8 +1,5 @@
 package no.ntnu.gui.common;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
@@ -11,6 +8,10 @@ import javafx.scene.layout.VBox;
 import no.ntnu.greenhouse.Sensor;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A section of GUI displaying sensor data.
@@ -32,7 +33,7 @@ public class SensorPane extends TitledPane {
   private void initialize(Iterable<SensorReading> sensors) {
     setText("Sensors");
     sensors.forEach(sensor ->
-        contentBox.getChildren().add(createAndRememberSensorLabel(sensor))
+            contentBox.getChildren().add(createAndRememberSensorLabel(sensor))
     );
     setContent(contentBox);
   }

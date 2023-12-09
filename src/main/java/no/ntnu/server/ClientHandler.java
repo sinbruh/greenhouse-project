@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.List;
 import java.util.prefs.NodeChangeEvent;
 import java.util.prefs.NodeChangeListener;
+
 import no.ntnu.communication.Command;
 import no.ntnu.communication.Message;
 import no.ntnu.communication.MessageSerializer;
@@ -27,7 +28,7 @@ import no.ntnu.listeners.greenhouse.SensorListener;
  * It reads client requests, executes corresponding commands, and sends responses back to the client.
  */
 public class ClientHandler extends Thread implements NodeStateListener, NodeChangeListener,
-    SensorListener, ActuatorListener {
+        SensorListener, ActuatorListener {
   private BufferedReader socketReader;
   private final Socket clientSocket;
   private final GreenhouseSimulator simulator;

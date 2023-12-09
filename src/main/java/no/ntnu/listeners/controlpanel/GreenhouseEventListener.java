@@ -1,8 +1,9 @@
 package no.ntnu.listeners.controlpanel;
 
-import java.util.List;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.SensorReading;
+
+import java.util.List;
 
 /**
  * Listener of events happening "inside a greenhouse", such as a node appearing, disappearing,
@@ -38,9 +39,9 @@ public interface GreenhouseEventListener {
   /**
    * This event is fired when an actuator changes state.
    *
-   * @param nodeId ID of the node to which the actuator is attached
+   * @param nodeId     ID of the node to which the actuator is attached
    * @param actuatorId ID of the actuator
-   * @param isOn  When true, actuator is on; off when false.
+   * @param isOn       When true, actuator is on; off when false.
    */
   void onActuatorStateChanged(int nodeId, int actuatorId, boolean isOn);
 

@@ -1,6 +1,5 @@
 package no.ntnu.gui.greenhouse;
 
-import java.util.List;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -12,6 +11,8 @@ import no.ntnu.gui.common.ActuatorPane;
 import no.ntnu.gui.common.SensorPane;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
+
+import java.util.List;
 
 /**
  * Window with GUI for overview and control of one specific sensor/actuator node.

@@ -1,11 +1,12 @@
 package no.ntnu.server;
 
+import no.ntnu.communication.Message;
+import no.ntnu.greenhouse.GreenhouseSimulator;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import no.ntnu.communication.Message;
-import no.ntnu.greenhouse.GreenhouseSimulator;
 
 /**
  * The GreenhouseServer class manages the communication between the GreenhouseSimulator,
@@ -13,7 +14,6 @@ import no.ntnu.greenhouse.GreenhouseSimulator;
  * as well as to initiate and manage the TCP server for handling client connections.
  */
 public class GreenhouseServer {
-  public static final int NODE_PORT = 1026;
   public static final int CONTROL_PANEL_PORT = 1025;
   private GreenhouseSimulator greenhouseSimulator;
   private boolean isTcpServerRunning;

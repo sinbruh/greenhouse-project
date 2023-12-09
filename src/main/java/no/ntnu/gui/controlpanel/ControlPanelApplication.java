@@ -1,8 +1,5 @@
 package no.ntnu.gui.controlpanel;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -11,14 +8,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
-import no.ntnu.controlpanel.RealCommunicationChannel;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.SensorReading;
@@ -29,11 +24,15 @@ import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.controlpanel.GreenhouseEventListener;
 import no.ntnu.tools.Logger;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Run a control panel with a graphical user interface (GUI), with JavaFX.
  */
 public class ControlPanelApplication extends Application implements GreenhouseEventListener,
-    CommunicationChannelListener, ActuatorListener {
+        CommunicationChannelListener, ActuatorListener {
   private static ControlPanelLogic logic;
   private static final int WIDTH = 500;
   private static final int HEIGHT = 400;
@@ -73,7 +72,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   public void start(Stage stage) {
     if (channel == null) {
       throw new IllegalStateException(
-          "No communication channel. See the README on how to use fake event spawner!");
+              "No communication channel. See the README on how to use fake event spawner!");
     }
 
     stage.setMinWidth(WIDTH);
@@ -168,9 +167,9 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   /**
    * Callback method that initiates when an actuator changes on a node.
    *
-   * @param nodeId ID of the node to which the actuator is attached.
+   * @param nodeId     ID of the node to which the actuator is attached.
    * @param actuatorId ID of the actuator whose state changes.
-   * @param isOn  When true, actuator is on; off when false.
+   * @param isOn       When true, actuator is on; off when false.
    */
   @Override
   public void onActuatorStateChanged(int nodeId, int actuatorId, boolean isOn) {
@@ -199,7 +198,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
    * the actuators on a node change.
    *
    * @param nodeID ID of the node where all actuators are located.
-   * @param isOn Indicating whether all actuators are in the on state.
+   * @param isOn   Indicating whether all actuators are in the on state.
    */
   @Override
   public void onAllActuatorChange(int nodeid, boolean isOn) {
@@ -212,7 +211,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   /**
    * Retrieves the stored actuators.
    *
-   * @param nodeId ID of the node.
+   * @param nodeId     ID of the node.
    * @param actuatorId ID of the actuator.
    * @return Returns the corresponding actuator to the specified node.
    */
@@ -241,7 +240,6 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
    *
    * @param nodeId  The ID of the node whose tab is to be removed.
    * @param nodeTab The Tab object representing the node tab to be removed.
-   *
    */
   private void removeNodeTab(int nodeId, Tab nodeTab) {
     nodeTab.getTabPane().getTabs().remove(nodeTab);
