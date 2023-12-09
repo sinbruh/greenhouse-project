@@ -23,6 +23,12 @@ public class StateMessage extends Message {
     this.value = value;
   }
 
+    /**
+     * Converts the state info into a formatted string.
+     * The format represents the state of the actuator.
+     *
+     * @return The state of the actuator.
+     */
   @Override
   public String messageAsString() {
     return "state|" + nodeid + "|" + actuatorid + "|" + (value ? "on" : "off");

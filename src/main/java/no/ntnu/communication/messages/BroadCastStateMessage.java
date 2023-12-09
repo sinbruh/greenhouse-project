@@ -9,11 +9,21 @@ public class BroadCastStateMessage extends Message {
   private final String nodeid;
   private final String state;
 
+  /**
+   * Constructor for the BroadCastStateMessage class. Represents a broadcast
+   * state message
+   * @param nodeid ID of the node.
+   * @param state State of the actuators on the node.
+   */
   public BroadCastStateMessage(String nodeid, String state) {
     this.nodeid = nodeid;
     this.state = state;
   }
 
+    /**
+     * Returns the message as a string suited for the broadcasting state message.
+     * @return the message as a string.
+     */
   @Override
   public String messageAsString() {
     return "broadCastState|" + nodeid + "|" + state;

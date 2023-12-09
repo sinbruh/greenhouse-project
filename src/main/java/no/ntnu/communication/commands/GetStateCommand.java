@@ -35,10 +35,10 @@ public class GetStateCommand extends Command {
   @Override
   public Message execute(GreenhouseSimulator simulator) {
     Actuator actuator = new Actuator(actuatorid, Parser.parseIntegerOrError(
-        nodeid, "Could not execute command, invalid nodeid"));
+        nodeid, "Could not execute command, invalid node-id"));
     return new StateMessage(
-        Parser.parseIntegerOrError(nodeid, "Could not execute, nodeid is invalid"),
-        Parser.parseIntegerOrError(actuatorid, "Could not execute, actuatorid is invalid"),
+        Parser.parseIntegerOrError(nodeid, "Could not execute, node-id is invalid"),
+        Parser.parseIntegerOrError(actuatorid, "Could not execute, actuator-id is invalid"),
         actuator.isOn());
   }
 
