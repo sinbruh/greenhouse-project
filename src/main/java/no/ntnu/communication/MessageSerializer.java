@@ -1,6 +1,7 @@
 package no.ntnu.communication;
 
 import no.ntnu.communication.commands.BroadCastSetStateCommand;
+import no.ntnu.communication.commands.DisconnectCommand;
 import no.ntnu.communication.commands.GetListOfNodeInfo;
 import no.ntnu.communication.commands.GetStateCommand;
 import no.ntnu.communication.commands.SetStateCommand;
@@ -30,6 +31,7 @@ public class MessageSerializer {
       case "getState" -> message = new GetStateCommand(tokens[0], tokens[1]);
       case "getNodes" -> message = new GetListOfNodeInfo();
       case "setBroadcastState" -> message = new BroadCastSetStateCommand(tokens[1], tokens[2]);
+      case "disconnect" -> message = new DisconnectCommand();
       default -> message = new ErrorMessage("Invalid message type");
     }
 

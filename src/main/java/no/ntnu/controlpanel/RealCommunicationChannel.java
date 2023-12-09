@@ -24,6 +24,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   private PrintWriter socketWriter;
   private BufferedReader socketReader;
   private boolean isOpen;
+  private boolean isRunning;
 
   public RealCommunicationChannel(ControlPanelLogic logic) {
     this.logic = logic;
@@ -89,16 +90,16 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
    */
   @Override
   public void run() {
-    boolean running = true;
-    while (running) {
+    isRunning = true;
+    while (isRunning) {
       String response = readResponse();
 
-      if (response == null) {
+      if ((response == null) && isRunning) {
         reconnect();
         response = readResponse();
         if (response == null) {
-          running = false;
-          continue;
+          isRunning = false;
+          break;
         }
       }
 
@@ -220,6 +221,13 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     return response;
   }
 
+  public void stopRunning() {
+    isRunning = false;
+    isOpen = false;
+    closeSocket();
+    System.exit(0);
+  }
+
   /**
    * Initializes the input and output streams for this communication channel.
    *
@@ -241,14 +249,14 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
    */
   public void closeSocket() {
     try {
-      if (socket != null && !socket.isClosed()) {
+      socketWriter.println("disconnect");
+
+      if (socket != null && !socket.isClosed() && isOpen) {
         socketWriter.println("Disconnect");
         socket.close();
         isOpen = false;
-        Logger.info("Socket closed");
-      } else {
-        Logger.info("Socket already closed");
       }
+        Logger.info("Socket closed");
     } catch (IOException e) {
       Logger.error("Could not close socket" + e.getMessage());
     }

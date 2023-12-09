@@ -13,9 +13,9 @@ import no.ntnu.greenhouse.GreenhouseSimulator;
  */
 public class GreenhouseServer {
   public static final int CONTROL_PANEL_PORT = 1025;
-  private GreenhouseSimulator greenhouseSimulator;
+  private final GreenhouseSimulator greenhouseSimulator;
   private boolean isTcpServerRunning;
-  private ArrayList<Socket> controlPanels;
+  private final ArrayList<Socket> controlPanels;
 
   /**
    * Constructs a GreenhouseServer with the specified GreenhouseSimulator.

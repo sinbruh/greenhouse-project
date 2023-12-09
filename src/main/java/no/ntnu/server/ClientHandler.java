@@ -9,6 +9,7 @@ import java.util.List;
 import no.ntnu.communication.Command;
 import no.ntnu.communication.Message;
 import no.ntnu.communication.MessageSerializer;
+import no.ntnu.communication.commands.DisconnectCommand;
 import no.ntnu.communication.commands.GetListOfNodeInfo;
 import no.ntnu.communication.messages.SensorReadingMessage;
 import no.ntnu.communication.messages.StateMessage;
@@ -77,11 +78,14 @@ public class ClientHandler extends Thread implements SensorListener, ActuatorLis
     Logger.info("handling new client on " + Thread.currentThread().getName());
 
     Message response = null;
-    do {
+
+    boolean running = true;
+
+    while (running) {
       Command clientCommand = readClientRequest();
 
       if (clientCommand == null) {
-        break;
+        running = false;
       }
 
       Logger.info(RECEIVED_FROM_CLIENT_MESSAGE + clientCommand);
@@ -90,19 +94,25 @@ public class ClientHandler extends Thread implements SensorListener, ActuatorLis
         readyToReceive = true;
       }
 
-      try {
-        response = clientCommand.execute(simulator);
-        Logger.info("Response: " + response.messageAsString());
-      } catch (Exception e) {
-        Logger.info("Could not execute command: " + e.getMessage());
-      }
+      if (clientCommand instanceof DisconnectCommand) {
+        running = false;
+        readyToReceive = false;
+      } else {
 
-      if (response != null) {
-        sendResponseToClient(response);
-      }
+        try {
+          response = clientCommand.execute(simulator);
+          Logger.info("Response: " + response.messageAsString());
+        } catch (Exception e) {
+          Logger.info("Could not execute command: " + e.getMessage());
+        }
 
-      Logger.info(RECEIVED_FROM_CLIENT_MESSAGE + clientCommand);
-    } while (response != null);
+        if (response != null) {
+          sendResponseToClient(response);
+        }
+
+        Logger.info(RECEIVED_FROM_CLIENT_MESSAGE + clientCommand);
+      }
+    }
   }
 
   /**

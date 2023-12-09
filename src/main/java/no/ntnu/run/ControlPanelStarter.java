@@ -101,7 +101,7 @@ public class ControlPanelStarter {
 
   private void stopCommunication() {
     if (channel instanceof RealCommunicationChannel realChannel) {
-      realChannel.closeSocket();
+      realChannel.stopRunning();
     }
   }
 }
