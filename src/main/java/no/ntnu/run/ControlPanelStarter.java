@@ -41,7 +41,7 @@ public class ControlPanelStarter {
 
   private void start() {
     ControlPanelLogic logic = new ControlPanelLogic();
-    CommunicationChannel channel = initiateCommunication(logic, fake);
+    channel = initiateCommunication(logic, fake);
     channel.start();
     ControlPanelApplication.startApp(logic, channel);
     // This code is reached only after the GUI-window is closed
@@ -50,13 +50,13 @@ public class ControlPanelStarter {
   }
 
   private CommunicationChannel initiateCommunication(ControlPanelLogic logic, boolean fake) {
-    CommunicationChannel channel;
+    CommunicationChannel newChannel;
     if (fake) {
-      channel = initiateFakeSpawner(logic);
+      newChannel = initiateFakeSpawner(logic);
     } else {
-      channel = initiateSocketCommunication(logic);
+      newChannel = initiateSocketCommunication(logic);
     }
-    return channel;
+    return newChannel;
   }
 
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {

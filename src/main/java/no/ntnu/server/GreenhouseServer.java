@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import no.ntnu.communication.Message;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 
 /**
@@ -97,18 +96,5 @@ public class GreenhouseServer {
       System.err.println("Failed to open client socket: " + e.getMessage());
     }
     return clientSocket;
-  }
-
-  /**
-   * Stops the TCP server.
-   */
-  private void stopServer() {
-    isTcpServerRunning = false;
-  }
-
-  /**
-   * Sends a message to all the clients currently connected to the server.
-   */
-  public void notifyAllClients(Message response) {
   }
 }

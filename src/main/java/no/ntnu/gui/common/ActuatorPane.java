@@ -59,7 +59,7 @@ public class ActuatorPane extends TitledPane {
 
     SimpleBooleanProperty isSelected = new SimpleBooleanProperty(actuator.isOn());
     actuatorActive.put(actuator, isSelected);
-    button.setOnAction((actionEvent) -> {
+    button.setOnAction(actionEvent -> {
       actuator.toggle();
       isSelected.set(actuator.isOn());
     });
@@ -74,13 +74,8 @@ public class ActuatorPane extends TitledPane {
    */
   public void addActuatorListener(ActuatorListener actuatorListener) {
     actuatorActive.forEach((actuator, isSelected) ->
-            isSelected.addListener((observable, oldValue, newValue) -> {
-              if (newValue != null && newValue) {
-                actuatorListener.actuatorUpdated(actuator.getNodeId(), actuator);
-              } else {
-                actuatorListener.actuatorUpdated(actuator.getNodeId(), actuator);
-              }
-            })
+            isSelected.addListener((observable, oldValue, newValue) ->
+                actuatorListener.actuatorUpdated(actuator.getNodeId(), actuator))
     );
   }
 
