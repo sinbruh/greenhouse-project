@@ -52,17 +52,22 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
 
 
       String[] nodeTokens = tokens[i].split(":");
-      int nodeId = Parser.parseIntegerOrError(nodeTokens[0], "Could not initialize nodes, invalid nodeid");
+      int nodeId = Parser.parseIntegerOrError(nodeTokens[0],
+          "Could not initialize nodes, invalid nodeid");
       SensorActuatorNodeInfo nodeInfo = new SensorActuatorNodeInfo(nodeId);
       if (nodeTokens.length > 1) {
         for (int j = 1; j < nodeTokens.length; j++) {
           String[] actuatorTokens = nodeTokens[j].split("/");
           nodeInfo.addActuator(
-              new Actuator(Integer.parseInt(actuatorTokens[0]), actuatorTokens[1], nodeId));
+              new Actuator(Parser.parseIntegerOrError(
+                  actuatorTokens[0], "Could not initialize node, invalid actuatorid"),
+                  actuatorTokens[1], nodeId));
           if (actuatorTokens.length > 2 && actuatorTokens[2].equals("on")) {
-            nodeInfo.getActuator(Integer.parseInt(actuatorTokens[0])).set(true);
+            nodeInfo.getActuator(Parser.parseIntegerOrError(
+                actuatorTokens[0], "Error: Could not parse actuator state")).set(true);
           } else if (actuatorTokens[2].equals("off")) {
-            nodeInfo.getActuator(Integer.parseInt(actuatorTokens[0])).set(false);
+            nodeInfo.getActuator(Parser.parseIntegerOrError(
+                actuatorTokens[0], "Error: Could not parse actuator state")).set(false);
           }
           Logger.info("Added actuator " + actuatorTokens[0] + " to node " + nodeId);
         }
@@ -102,7 +107,8 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
 
       switch (tokens[0]) {
         case "sensorReading":
-          logic.onSensorData(Integer.parseInt(tokens[1]), parseSensorReading(tokens[2]));
+          logic.onSensorData(Parser.parseIntegerOrError(tokens[1], "Could not parse token"),
+              parseSensorReading(tokens[2]));
           break;
         case "nodes":
           initNodes(tokens);
@@ -141,9 +147,19 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
 
   }
 
+  /**
+   * Parses a state message.
+   *
+   * @param nodeid     The node ID.
+   * @param actuatorid The actuator ID.
+   * @param state      The state of the actuator.
+   */
   public void parseStateMessage(String nodeid, String actuatorid, String state) {
     boolean stateBool = state.equals("on");
-    logic.onActuatorStateChanged(Integer.parseInt(nodeid), Integer.parseInt(actuatorid), stateBool);
+    logic.onActuatorStateChanged(Parser.parseIntegerOrError(nodeid,
+            "Could not parse nodeid in statemessage"),
+        Parser.parseIntegerOrError(actuatorid, "Could not parse nodeid in statemessage"),
+        stateBool);
   }
 
   /**
@@ -155,7 +171,9 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   public void parseBroadcastStateMessage(String nodeid, String state) {
     System.out.println("broadcaststate method");
     boolean stateBool = state.equals("on");
-    logic.onAllActuatorChange(Integer.parseInt(nodeid), stateBool);
+    logic.onAllActuatorChange(Parser.parseIntegerOrError(nodeid,
+            "Could not parse nodeid in parseBroadCastMessage"),
+        stateBool);
   }
 
 
@@ -219,21 +237,21 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     }
   }
 
-    /**
-     * Closes the socket for this communication channel.
-     */
-    public void closeSocket() {
-      try {
-        if (socket !=null && !socket.isClosed()) {
-          socketWriter.println("Disconnect");
-            socket.close();
-            isOpen = false;
-            Logger.info("Socket closed");
-        } else {
-          Logger.info("Socket already closed");
-        }
-      } catch (IOException e) {
-        Logger.error("Could not close socket" + e.getMessage());
+  /**
+   * Closes the socket for this communication channel.
+   */
+  public void closeSocket() {
+    try {
+      if (socket != null && !socket.isClosed()) {
+        socketWriter.println("Disconnect");
+        socket.close();
+        isOpen = false;
+        Logger.info("Socket closed");
+      } else {
+        Logger.info("Socket already closed");
       }
+    } catch (IOException e) {
+      Logger.error("Could not close socket" + e.getMessage());
     }
+  }
 }

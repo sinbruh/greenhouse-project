@@ -6,6 +6,7 @@ import no.ntnu.communication.Message;
 import no.ntnu.communication.messages.StateMessage;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.GreenhouseSimulator;
+import no.ntnu.tools.Parser;
 
 /**
  * Represents a command to set the state of an actuator, either on or off.
@@ -38,8 +39,11 @@ public class SetStateCommand extends Command {
    */
   @Override
   public Message execute(GreenhouseSimulator simulator) {
-    Actuator actuator = simulator.getNodes().get(Integer.parseInt(nodeid)).getActuators()
-        .get(Integer.parseInt(actuatorid));
+    Actuator actuator = simulator.getNodes()
+        .get(Parser.parseIntegerOrError(nodeid, "Could not execute command, nodeid is invalid"))
+        .getActuators()
+        .get(Parser.parseIntegerOrError(actuatorid,
+            "Could not execute command, actuatorid is invalid"));
     if (value.equals("on")) {
       actuator.turnOn();
     } else if (value.equals("off")) {
@@ -47,7 +51,8 @@ public class SetStateCommand extends Command {
     } else {
       return new ErrorMessage("error: invalid value in setState command");
     }
-    return new StateMessage(Integer.parseInt(nodeid), Integer.parseInt(actuatorid),
+    return new StateMessage(Parser.parseIntegerOrError(nodeid, "Could not parse nodeid"),
+        Parser.parseIntegerOrError(actuatorid, "Could not parse actuatorid"),
         actuator.isOn());
   }
 

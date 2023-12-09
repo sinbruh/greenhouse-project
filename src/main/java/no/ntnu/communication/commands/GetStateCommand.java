@@ -5,6 +5,7 @@ import no.ntnu.communication.Message;
 import no.ntnu.communication.messages.StateMessage;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.GreenhouseSimulator;
+import no.ntnu.tools.Parser;
 
 /**
  * Command class that will get the state of an Actuator. User types
@@ -33,9 +34,12 @@ public class GetStateCommand extends Command {
    */
   @Override
   public Message execute(GreenhouseSimulator simulator) {
-    Actuator actuator = new Actuator(actuatorid, Integer.parseInt(nodeid));
+    Actuator actuator = new Actuator(actuatorid, Parser.parseIntegerOrError(
+        nodeid, "Could not execute command, invalid nodeid"));
     return new StateMessage(
-        Integer.parseInt(nodeid), Integer.parseInt(actuatorid), actuator.isOn());
+        Parser.parseIntegerOrError(nodeid, "Could not execute, nodeid is invalid"),
+        Parser.parseIntegerOrError(actuatorid, "Could not execute, actuatorid is invalid"),
+        actuator.isOn());
   }
 
   /**
