@@ -43,17 +43,6 @@ public class ConnectionManager {
         System.out.println("Reconnected to server");
     }
 
-    public void closeConnection() {
-        try {
-            clientSocket.close();
-            socketReader.close();
-            socketWriter.close();
-            System.out.println("Connection closed");
-        } catch (IOException e) {
-            System.err.println("Could not close connection");
-        }
-    }
-
     public BufferedReader getSocketReader() {
         return socketReader;
     }

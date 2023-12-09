@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.util.List;
 import java.util.prefs.NodeChangeEvent;
 import java.util.prefs.NodeChangeListener;
-import no.ntnu.communication.commands.GetListOfNodes;
 import no.ntnu.communication.messages.SensorReadingMessage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.communication.Message;
@@ -33,7 +32,7 @@ import no.ntnu.listeners.greenhouse.SensorListener;
 public class ClientHandler extends Thread implements NodeStateListener, NodeChangeListener,
     SensorListener, ActuatorListener {
   private BufferedReader socketReader;
-  private ConnectionManager connectionManager;
+  private final ConnectionManager connectionManager;
   private final Socket clientSocket;
   private final GreenhouseSimulator simulator;
   private PrintWriter socketWriter;
