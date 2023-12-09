@@ -17,6 +17,7 @@ public class DeviceFactory {
   private static final String SENSOR_TYPE_TEMPERATURE = "temperature";
   private static int nextNodeId = 1;
   private static final String SENSOR_NODE_ID = "10";
+  private static NodeIdAllocator nodeIdAllocator = new NodeIdAllocator();
 
 
   /**
@@ -37,12 +38,12 @@ public class DeviceFactory {
    */
   public static SensorActuatorNode createNode(int temperatureSensorCount, int humiditySensorCount,
                                               int windowCount, int fanCount, int heaterCount) {
-    SensorActuatorNode node = new SensorActuatorNode(generateUniqueNodeId());
+    SensorActuatorNode node = new SensorActuatorNode(nodeIdAllocator.assignNodeId());
     if (temperatureSensorCount > 0) {
-      node.addSensors(DeviceFactory.createTemperatureSensor(), temperatureSensorCount);
+      node.addSensors(DeviceFactory.createTemperatureSensor(node.getId()), temperatureSensorCount);
     }
     if (humiditySensorCount > 0) {
-      node.addSensors(DeviceFactory.createHumiditySensor(), humiditySensorCount);
+      node.addSensors(DeviceFactory.createHumiditySensor(node.getId()), humiditySensorCount);
     }
     if (windowCount > 0) {
       addActuators(node, DeviceFactory.createWindow(node.getId()), windowCount);
@@ -82,9 +83,9 @@ public class DeviceFactory {
    *
    * @return A typical temperature sensor, which can be used as a template
    */
-  public static Sensor createTemperatureSensor() {
+  public static Sensor createTemperatureSensor(int nodeId) {
     return new Sensor(SENSOR_TYPE_TEMPERATURE, MIN_TEMPERATURE, MAX_TEMPERATURE,
-        randomize(NORMAL_GREENHOUSE_TEMPERATURE, 1.0), TEMPERATURE_UNIT, SENSOR_NODE_ID);
+        randomize(NORMAL_GREENHOUSE_TEMPERATURE, 1.0), TEMPERATURE_UNIT, nodeId);
   }
 
   /**
@@ -92,9 +93,9 @@ public class DeviceFactory {
    *
    * @return A typical humidity sensor which can be used as a template
    */
-  public static Sensor createHumiditySensor() {
+  public static Sensor createHumiditySensor(int nodeId) {
     return new Sensor("humidity", MIN_HUMIDITY, MAX_HUMIDITY,
-        randomize(NORMAL_GREENHOUSE_HUMIDITY, 5.0), HUMIDITY_UNIT, SENSOR_NODE_ID);
+        randomize(NORMAL_GREENHOUSE_HUMIDITY, 5.0), HUMIDITY_UNIT, nodeId);
   }
 
   /**
@@ -103,12 +104,12 @@ public class DeviceFactory {
    * @param type The type of sensor to create.
    * @return A new sensor of the specified type.
    */
-  public static Sensor createSensorBasedOnType(SensorType type) {
+  public static Sensor createSensorBasedOnType(SensorType type, int nodeId) {
     switch (type) {
       case TEMPERATURE:
-        return createTemperatureSensor();
+        return createTemperatureSensor(nodeId);
       case HUMIDITY:
-        return createHumiditySensor();
+        return createHumiditySensor(nodeId);
       default:
         throw new IllegalArgumentException("Unsupported sensor type: " + type);
     }
