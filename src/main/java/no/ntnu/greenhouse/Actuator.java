@@ -26,11 +26,11 @@ public class Actuator {
    * @param type   The type of the actuator.
    * @param nodeId ID of the node to which this actuator is connected.
    */
-  public Actuator(String type, int nodeId) {
+  public Actuator(String type, int actuatornodeId) {
     this.type = type;
-    this.nodeId = nodeId;
+    this.nodeId = actuatornodeId;
     this.on = false;
-    this.id = generateUniqueId();
+    this.id = nodeId;
   }
 
   /**
