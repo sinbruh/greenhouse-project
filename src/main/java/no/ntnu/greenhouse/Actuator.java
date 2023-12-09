@@ -130,6 +130,11 @@ public class Actuator {
     }
   }
 
+  /**
+   * Returns a string of an actuator object.
+   *
+   * @return A string representation of the actuator.
+   */
   @Override
   public String toString() {
     return "Actuator{"

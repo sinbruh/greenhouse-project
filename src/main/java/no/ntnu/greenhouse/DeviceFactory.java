@@ -56,6 +56,13 @@ public class DeviceFactory {
     return node;
   }
 
+  /**
+   * Adds a specified numbers of actuators to a sensor actuator node.
+   *
+   * @param node The sensorActuatorNode the actuators will be added to.
+   * @param template The template actuator used to create a clone.
+   * @param n The number of actuators to add.
+   */
   static void addActuators(SensorActuatorNode node, Actuator template, int n) {
     if (template == null) {
       throw new IllegalArgumentException("Actuator template is missing");

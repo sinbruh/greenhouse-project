@@ -67,6 +67,12 @@ public class ActuatorPane extends TitledPane {
     return button;
   }
 
+  /**
+   * Method that adds actuator listener to receive updates when
+   * the state of an actuator changes.
+   *
+   * @param actuatorListener
+   */
   public void addActuatorListener(ActuatorListener actuatorListener) {
     actuatorActive.forEach((actuator, isSelected) ->
         isSelected.addListener((observable, oldValue, newValue) -> {
