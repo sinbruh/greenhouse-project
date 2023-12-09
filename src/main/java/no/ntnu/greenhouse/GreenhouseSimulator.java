@@ -62,13 +62,19 @@ public class GreenhouseSimulator {
     Logger.info("Simulator started");
   }
 
+  /**
+   * Initiate communication with sensorActuatorNode.
+   * If using fake communication, also initiate fake periodic switches.
+   */
   private void initiateCommunication() {
     if (fake) {
       initiateFakePeriodicSwitches();
     }
   }
 
-
+  /**
+   * Initiate fake periodic switches for testing or simulating.
+   */
   private void initiateFakePeriodicSwitches() {
     periodicSwitches.add(new PeriodicSwitch("Window DJ", nodes.get(1), 2, 20000));
     periodicSwitches.add(new PeriodicSwitch("Heater DJ", nodes.get(2), 7, 8000));
