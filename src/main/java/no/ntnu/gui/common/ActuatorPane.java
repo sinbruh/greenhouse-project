@@ -1,14 +1,11 @@
 package no.ntnu.gui.common;
 
-import java.util.HashMap;
-import java.util.Map;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
@@ -17,6 +14,9 @@ import javafx.scene.layout.VBox;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.listeners.common.ActuatorListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A section of the GUI representing a list of actuators. Can be used both on the sensor/actuator
@@ -43,7 +43,7 @@ public class ActuatorPane extends TitledPane {
 
   private void addActuatorControls(ActuatorCollection actuators, Pane parent) {
     actuators.forEach(actuator ->
-        parent.getChildren().add(createActuatorGui(actuator))
+            parent.getChildren().add(createActuatorGui(actuator))
     );
   }
 
@@ -75,13 +75,13 @@ public class ActuatorPane extends TitledPane {
    */
   public void addActuatorListener(ActuatorListener actuatorListener) {
     actuatorActive.forEach((actuator, isSelected) ->
-        isSelected.addListener((observable, oldValue, newValue) -> {
-          if (newValue != null && newValue) {
-            actuatorListener.actuatorUpdated(actuator.getNodeId(), actuator);
-          } else {
-            actuatorListener.actuatorUpdated(actuator.getNodeId(), actuator);
-          }
-        })
+            isSelected.addListener((observable, oldValue, newValue) -> {
+              if (newValue != null && newValue) {
+                actuatorListener.actuatorUpdated(actuator.getNodeId(), actuator);
+              } else {
+                actuatorListener.actuatorUpdated(actuator.getNodeId(), actuator);
+              }
+            })
     );
   }
 

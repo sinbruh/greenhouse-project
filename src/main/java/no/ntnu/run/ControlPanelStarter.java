@@ -1,6 +1,5 @@
 package no.ntnu.run;
 
-import java.net.Socket;
 import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.FakeCommunicationChannel;
@@ -8,6 +7,8 @@ import no.ntnu.controlpanel.RealCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.server.GreenhouseServer;
 import no.ntnu.tools.Logger;
+
+import java.net.Socket;
 
 /**
  * Starter class for the control panel.
@@ -81,13 +82,13 @@ public class ControlPanelStarter {
     spawner.advertiseSensorData("4;temperature=27.4 °C,temperature=26.8 °C,humidity=80 %", 4);
     spawner.spawnNode("8;2_heater", 5);
     spawner.advertiseActuatorState(4, 1, true, 5);
-    spawner.advertiseActuatorState(4,  1, false, 6);
-    spawner.advertiseActuatorState(4,  1, true, 7);
-    spawner.advertiseActuatorState(4,  2, true, 7);
-    spawner.advertiseActuatorState(4,  1, false, 8);
-    spawner.advertiseActuatorState(4,  2, false, 8);
-    spawner.advertiseActuatorState(4,  1, true, 9);
-    spawner.advertiseActuatorState(4,  2, true, 9);
+    spawner.advertiseActuatorState(4, 1, false, 6);
+    spawner.advertiseActuatorState(4, 1, true, 7);
+    spawner.advertiseActuatorState(4, 2, true, 7);
+    spawner.advertiseActuatorState(4, 1, false, 8);
+    spawner.advertiseActuatorState(4, 2, false, 8);
+    spawner.advertiseActuatorState(4, 1, true, 9);
+    spawner.advertiseActuatorState(4, 2, true, 9);
     spawner.advertiseSensorData("4;temperature=22.4 °C,temperature=26.0 °C,humidity=81 %", 9);
     spawner.advertiseSensorData("1;humidity=80 %,humidity=82 %", 10);
     spawner.advertiseRemovedNode(8, 11);
