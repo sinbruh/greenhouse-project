@@ -62,31 +62,31 @@ There are two types of messages, a regular message and a command. The commands w
 and will generally have a type (what the command does), a nodeID (which node gets affected), and an actuatorID. Some
 commands don't need all this information though, so they might not have all of these fields. 
 
-We will use the symbol "|" as a separator. So an example message could look like this "turnOn|4561|1". If the command 
-should be broadcasted, then we use a B symbol instead of the nodeID; like this: "turnOn|B". The structure of a message 
-will be similar to the structure of a command.
+We will use the symbol "|" as a separator. So an example message could look like this "turnOn|4561|1". Some commands
+and messages will have a value where there will be a second operator. The second operator will be a ":". So an example
+message with a value could look like this "state|1:1|4561|1". The first operator separates the type of message from the
+rest of the message. The second operator separates the value from the rest of the message. This is used in messages
+like SensorReadingMessage. The structure of a message will mostly the same as a command, the only identifier is the
+type of the message or command, which will always be the first part of the message.
 
 Commands: "commandType|nodeID|actuatorID/sensorID|value|"
 * setState - sets the state of an actuator, on or off. type: "setState"
-* getListOfSensors - returns a list of sensors does not require an actuatorId or sensorID. type: "getSensors"
 * getListOfNodes - returns a list of all nodes. type: "getNodes"
+* disconnect - disconnects a control panel from the server. type: "disconnect"
+* BroadcastSetState - sets the state of all actuators on a node. type: "setBroadcastState"
 
 Messages: "messageType|messageValue|nodeID|sensorID"
 * state - the state of an actuator, can be on or off. type: "state"
-* listOfSensors - returns a list of sensor. The list will be in the form of a string and needs to be parsed.
-    The separator used in the string to separate sensors is a colon ":". type: "sensors"
 * listOfNodeInfo - returns a list of nodes. The list will be in the form of a string and needs to be parsed.
     The separator used in the string to separate nodes is a colon ":". type: "nodes"
-* successful operation - when a command is sent to a sensor-actuator node, a successful operation will be sent to
-    the control panel that sent the command. type: "so"
 * error - when a command is sent to a sensor-actuator node, but an error occurs, an error message will be sent to
     the control panel that sent the command. type: "error"
 * SensorReadingMessage - a message that contains a list of sensor readings on a node. The list will be formatted like
     this "type:value:unit/type:value:unit". ":" separates the values of a sensor, "/" separates
     sensors. the sensor type can be humidity or temperature (currently). type: "sensorReading"
+* BroadcastState - a message that contains the state of all actuators on a node. type: "broadCastState"
 
 ### Error messages
- 
 
 * Too many arguments.
 * Invalid ID.

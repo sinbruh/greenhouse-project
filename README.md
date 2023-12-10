@@ -19,6 +19,9 @@ To run the greenhouse part (with sensor/actuator nodes):
 * Command line version: run the `main` method inside `CommandLineGreenhouse` class.
 * GUI version: run the `main` method inside `GreenhouseGuiStarter` class. Note - if you run the
   `GreenhouseApplication` class directly, JavaFX will complain that it can't find necessary modules.
+* To run the greenhouse with real communication, run the `main` method inside the `GreenhouseStarter`
+  class. This will start a command line greenhouse, which is read only. It will also start a server.
+  To interact with the greenhouse, you need a control panel. See below.
 
 To run the control panel (only GUI-version is available): run the `main` method inside the
 `ControlPanelStarter` class
