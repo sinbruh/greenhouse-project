@@ -109,5 +109,11 @@ Messages: "messageType|messageValue|nodeID|sensorID"
 
 ## Reliability and security
 
-TODO - describe the reliability and security mechanisms your solution supports.
+* Reliability handling. The server keeps track of connected control panels
+  and attempts to reconnect up to five times.
+* Using TCP communication for its reliability and ensuring every message is
+  received in correct sequence.
+* At the moment we don't have any security feature that works. We have started
+  developments on SSL on another branch in this project for future work.
+
 

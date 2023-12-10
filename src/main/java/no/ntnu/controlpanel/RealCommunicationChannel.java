@@ -25,7 +25,7 @@ import no.ntnu.tools.Parser;
  * A real communication channel. Communicates with the server over a TCP connection.
  */
 public class RealCommunicationChannel extends Thread implements CommunicationChannel {
-  private static final int MAX_RECONNECT_ATTEMPTS = 5;
+  protected static final int MAX_RECONNECT_ATTEMPTS = 5;
   private static final long RECONNECT_DELAY_MS = 5000;
   private Socket socket;
   private ControlPanelLogic logic;
@@ -227,4 +227,8 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
       Logger.error("Could not close socket" + e.getMessage());
     }
   }
+
+  protected void setSocketWriter(PrintWriter writer) {
+    this.socketWriter = writer;
+}
 }
