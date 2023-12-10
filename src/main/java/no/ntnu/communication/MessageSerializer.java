@@ -1,5 +1,8 @@
 package no.ntnu.communication;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.zip.DataFormatException;
 import no.ntnu.communication.commands.BroadCastSetStateCommand;
 import no.ntnu.communication.commands.DisconnectCommand;
 import no.ntnu.communication.commands.GetListOfNodeInfo;
@@ -14,9 +17,6 @@ import no.ntnu.greenhouse.NodeInterface;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.Parser;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.zip.DataFormatException;
 
 /**
  * Class for serializing and deserializing Message objects.
@@ -108,8 +108,6 @@ public class MessageSerializer {
   }
 
   private static Message parseSensorReading(String nodeId, String sensorReading) {
-    Message message = null;
-
     Logger.info("Parsing sensor reading: " + sensorReading);
     ArrayList<SensorReading> sensorReadings = new ArrayList<>();
     String[] sensors = sensorReading.split("/");
@@ -119,11 +117,11 @@ public class MessageSerializer {
               new SensorReading(sensorTokens[0],
                       Double.parseDouble(sensorTokens[1]), sensorTokens[2]));
     }
-    sensorReadings.forEach(SensorReading -> Logger.info(SensorReading.toString()));
+    sensorReadings.forEach(sensReading -> Logger.info(sensReading.toString()));
 
     int parsedNodeId = Parser.parseIntegerOrError(nodeId, "Could not parse token");
 
-    message = new SensorReadingMessage(parsedNodeId, sensorReadings);
+    Message message = new SensorReadingMessage(parsedNodeId, sensorReadings);
 
     return message;
   }

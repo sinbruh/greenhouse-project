@@ -1,12 +1,12 @@
 package no.ntnu.communication.commands;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import no.ntnu.communication.Command;
 import no.ntnu.communication.Message;
 import no.ntnu.communication.messages.ListOfNodesMessage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.greenhouse.NodeInterface;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Command to get a list of all nodes in the system. The list is sent as a ListOfNodesMessage.
