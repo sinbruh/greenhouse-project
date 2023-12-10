@@ -1,11 +1,12 @@
-package no.ntnu.server;
+package no.ntnu.run;
 
 import no.ntnu.greenhouse.GreenhouseSimulator;
+import no.ntnu.server.GreenhouseServer;
 
 /**
  * Main class for the server.
  */
-public class ServerRunner {
+public class GreenhouseStarter {
   /**
    * Starts the server.
    *
