@@ -9,9 +9,9 @@ public class MessageSerializerTest {
     @Test
     public void testCommandFromString() {
         // Test with a TurnOnCommand message
-        String rawClientRequest = "on|132123|123123";
+        String rawClientRequest = "setState|234234|234234|on";
         Message message = MessageSerializer.fromString(rawClientRequest);
-        assertTrue(message instanceof GetStateCommand);
+        assertTrue(message instanceof SetStateCommand);
     }
 
     @Test

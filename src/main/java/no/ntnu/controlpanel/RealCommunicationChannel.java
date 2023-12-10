@@ -231,8 +231,4 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
       Logger.error("Could not close socket" + e.getMessage());
     }
   }
-
-  protected void setSocketWriter(PrintWriter writer) {
-    this.socketWriter = writer;
-  }
 }
