@@ -1,14 +1,9 @@
 package no.ntnu.communication.messages;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-
 import no.ntnu.communication.Message;
-import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.NodeInterface;
-import no.ntnu.greenhouse.SensorActuatorNode;
 
 /**
  * Message class that will list all the nodes in the greenhouse.
@@ -30,30 +25,30 @@ public class ListOfNodesMessage extends Message {
     return nodes;
   }
 
-    /**
-     * Converts the state of the SensorActuatorNode instance in the collection to
-     * a formatted string that represents the node's "message" type that contains the
-     * information about the nodes.
-     *
-     * @return a string representing the node's "message" type, containing info about the nodes.
-     */
+  /**
+   * Converts the state of the SensorActuatorNode instance in the collection to
+   * a formatted string that represents the node's "message" type that contains the
+   * information about the nodes.
+   *
+   * @return a string representing the node's "message" type, containing info about the nodes.
+   */
   @Override
   public String messageAsString() {
     StringBuilder builder = new StringBuilder();
     builder.append("nodes");
 
-      for (NodeInterface nodeInfo : nodes) {
-        builder.append("|");
-        builder.append(nodeInfo.getId());
-        for (Actuator actuator : nodeInfo.getActuators()) {
-          builder.append(":");
-          builder.append(actuator.getId());
-          builder.append("/");
-          builder.append(actuator.getType());
-          builder.append("/");
-          builder.append(actuator.isOn() ? "on" : "off");
-        }
+    for (NodeInterface nodeInfo : nodes) {
+      builder.append("|");
+      builder.append(nodeInfo.getId());
+      for (Actuator actuator : nodeInfo.getActuators()) {
+        builder.append(":");
+        builder.append(actuator.getId());
+        builder.append("/");
+        builder.append(actuator.getType());
+        builder.append("/");
+        builder.append(actuator.isOn() ? "on" : "off");
       }
-      return builder.toString();
     }
+    return builder.toString();
+  }
 }

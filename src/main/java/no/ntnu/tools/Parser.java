@@ -56,7 +56,8 @@ public class Parser {
    * @throws DataFormatException When the provided string does not contain a valid boolean,
    *                               throw an exception with the provided error message
    */
-  public static boolean parseBooleanOrError(String s, String errorMessage) throws DataFormatException {
+  public static boolean parseBooleanOrError(String s, String errorMessage)
+          throws DataFormatException {
     if (s.equals("on")) {
       return true;
     } else if (s.equals("off")) {

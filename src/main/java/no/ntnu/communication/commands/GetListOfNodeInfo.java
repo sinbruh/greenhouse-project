@@ -5,7 +5,6 @@ import no.ntnu.communication.Message;
 import no.ntnu.communication.messages.ListOfNodesMessage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.greenhouse.NodeInterface;
-
 import java.util.ArrayList;
 import java.util.Collection;
 

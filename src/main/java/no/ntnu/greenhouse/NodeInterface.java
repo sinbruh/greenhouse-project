@@ -1,9 +1,10 @@
 package no.ntnu.greenhouse;
 
-import java.util.List;
-
+/**
+ * Interface for nodes.
+ */
 public interface NodeInterface {
-    int getId();
+  int getId();
 
-    ActuatorCollection getActuators();
+  ActuatorCollection getActuators();
 }

@@ -13,6 +13,12 @@ public class SensorReadingMessage extends Message {
   List<SensorReading> sensorReadings;
   int nodeid;
 
+  /**
+   * Constructs a SensorReadingMessage object with the specified list of sensors and node ID.
+   *
+   * @param sensors A list of Sensor objects from which readings will be extracted.
+   * @param nodeId The unique identifier for the node associated with the sensor readings.
+   */
   public SensorReadingMessage(List<Sensor> sensors, int nodeId) {
     this.nodeid = nodeId;
     this.sensorReadings = new ArrayList<>();

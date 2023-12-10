@@ -13,9 +13,9 @@ public class StateMessage extends Message {
   /**
    * Constructor for the StateMessage class.
    *
-   * @param nodeid The ID of the node containing the actuator.
+   * @param nodeid     The ID of the node containing the actuator.
    * @param actuatorid The ID of the actuator.
-   * @param state The state the actuator should be set to.
+   * @param state      The state the actuator should be set to.
    */
   public StateMessage(int nodeid, int actuatorid, boolean state) {
     this.nodeid = nodeid;
@@ -23,12 +23,12 @@ public class StateMessage extends Message {
     this.state = state;
   }
 
-    /**
-     * Converts the state info into a formatted string.
-     * The format represents the state of the actuator.
-     *
-     * @return The state of the actuator.
-     */
+  /**
+   * Converts the state info into a formatted string.
+   * The format represents the state of the actuator.
+   *
+   * @return The state of the actuator.
+   */
   @Override
   public String messageAsString() {
     return "state|" + nodeid + "|" + actuatorid + "|" + (state ? "on" : "off");

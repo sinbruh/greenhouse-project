@@ -3,7 +3,6 @@ package no.ntnu.communication;
 import no.ntnu.communication.commands.BroadCastSetStateCommand;
 import no.ntnu.communication.commands.DisconnectCommand;
 import no.ntnu.communication.commands.GetListOfNodeInfo;
-import no.ntnu.communication.commands.GetStateCommand;
 import no.ntnu.communication.commands.SetStateCommand;
 import no.ntnu.communication.messages.BroadCastStateMessage;
 import no.ntnu.communication.messages.ListOfNodesMessage;
@@ -12,12 +11,9 @@ import no.ntnu.communication.messages.StateMessage;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.NodeInterface;
-import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.Parser;
-import org.w3c.dom.Node;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.zip.DataFormatException;
@@ -120,7 +116,8 @@ public class MessageSerializer {
     for (String sensor : sensors) {
       String[] sensorTokens = sensor.split(":");
       sensorReadings.add(
-              new SensorReading(sensorTokens[0], Double.parseDouble(sensorTokens[1]), sensorTokens[2]));
+              new SensorReading(sensorTokens[0],
+                      Double.parseDouble(sensorTokens[1]), sensorTokens[2]));
     }
     sensorReadings.forEach(SensorReading -> Logger.info(SensorReading.toString()));
 
@@ -150,7 +147,7 @@ public class MessageSerializer {
     BroadCastStateMessage message = null;
 
     try {
-      Logger.info("Parsing broadcast state message: " + nodeId + " " + state );
+      Logger.info("Parsing broadcast state message: " + nodeId + " " + state);
       int parsedNodeId = Parser.parseIntegerOrError(nodeId, "Could not parse token");
       boolean parsedStateBool = Parser.parseBooleanOrError(state, "Could not parse token");
       message = new BroadCastStateMessage(parsedNodeId, parsedStateBool);

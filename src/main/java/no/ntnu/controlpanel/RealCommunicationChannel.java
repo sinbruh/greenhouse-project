@@ -5,21 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-
-import no.ntnu.communication.Message;
 import no.ntnu.communication.MessageSerializer;
 import no.ntnu.communication.messages.BroadCastStateMessage;
 import no.ntnu.communication.messages.ListOfNodesMessage;
 import no.ntnu.communication.messages.SensorReadingMessage;
 import no.ntnu.communication.messages.StateMessage;
-import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.SensorActuatorNode;
-import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.server.GreenhouseServer;
 import no.ntnu.tools.Logger;
-import no.ntnu.tools.Parser;
 
 /**
  * A real communication channel. Communicates with the server over a TCP connection.
@@ -51,12 +43,14 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   }
 
   /**
-   * Initializes nodes based on the provided response. Each token represents a node and its actuators.
+   * Initializes nodes based on the provided response.
+   * Each token represents a node and its actuators.
    *
    * @param response The response representing the nodes and their actuators.
    */
   public void initNodes(String response) {
-    ListOfNodesMessage nodesMessage = (ListOfNodesMessage) MessageSerializer.fromString(response.toString());
+    ListOfNodesMessage nodesMessage = (ListOfNodesMessage)
+            MessageSerializer.fromString(response.toString());
     nodesMessage.getNodes().forEach(node -> {
       SensorActuatorNodeInfo sensorActuatorNodeInfo = new SensorActuatorNodeInfo(node.getId());
       node.getActuators().forEach(actuator -> sensorActuatorNodeInfo.addActuator(actuator));
@@ -93,13 +87,17 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
       Logger.info("Received message: " + response);
 
       switch (tokens[0]) {
-        case "sensorReading": parseSensorReading(response);
+        case "sensorReading":
+          parseSensorReading(response);
           break;
-        case "nodes": initNodes(response);
+        case "nodes":
+          initNodes(response);
           break;
-        case "state": parseStateMessage(response);
+        case "state":
+          parseStateMessage(response);
           break;
-        case "broadCastState": parseBroadcastStateMessage(response);
+        case "broadCastState":
+          parseBroadcastStateMessage(response);
           break;
         default:
           Logger.error("Unknown message type: " + tokens[0]);
@@ -135,7 +133,8 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
    */
   public void parseStateMessage(String response) {
     StateMessage stateMessage = (StateMessage) MessageSerializer.fromString(response);
-    logic.onActuatorStateChanged(stateMessage.getNodeid(), stateMessage.getActuatorid(), stateMessage.getState());
+    logic.onActuatorStateChanged(stateMessage.getNodeid(),
+            stateMessage.getActuatorid(), stateMessage.getState());
   }
 
   /**
@@ -146,7 +145,8 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   public void parseBroadcastStateMessage(String response) {
     Logger.info("rcc parsing: " + response);
 
-    BroadCastStateMessage broadCastStateMessage = (BroadCastStateMessage) MessageSerializer.fromString(response);
+    BroadCastStateMessage broadCastStateMessage =
+            (BroadCastStateMessage) MessageSerializer.fromString(response);
     logic.onAllActuatorChange(broadCastStateMessage.getNodeid(), broadCastStateMessage.getState());
   }
 
@@ -155,10 +155,10 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
    * Parses a sensor reading string into a list of SensorReading objects.
    *
    * @param sensorReading The sensor reading string to parse.
-   * @return A list of SensorReading objects representing the parsed sensor readings.
    */
   public void parseSensorReading(String sensorReading) {
-    SensorReadingMessage sensorReadingMessage = (SensorReadingMessage) MessageSerializer.fromString(sensorReading);
+    SensorReadingMessage sensorReadingMessage =
+            (SensorReadingMessage) MessageSerializer.fromString(sensorReading);
     logic.onSensorData(sensorReadingMessage.getNodeid(), sensorReadingMessage.getSensorReadings());
   }
 
@@ -187,6 +187,10 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     return response;
   }
 
+  /**
+   * Stops the execution of the current process and closing resources,
+   * terminating the application.
+   */
   public void stopRunning() {
     isRunning = false;
     isOpen = false;
@@ -222,7 +226,7 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
         socket.close();
         isOpen = false;
       }
-        Logger.info("Socket closed");
+      Logger.info("Socket closed");
     } catch (IOException e) {
       Logger.error("Could not close socket" + e.getMessage());
     }
@@ -230,5 +234,5 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
 
   protected void setSocketWriter(PrintWriter writer) {
     this.socketWriter = writer;
-}
+  }
 }
