@@ -1,28 +1,46 @@
 package no.ntnu.communication.messages;
 
+import java.util.ArrayList;
 import java.util.List;
 import no.ntnu.communication.Message;
 import no.ntnu.greenhouse.Sensor;
+import no.ntnu.greenhouse.SensorReading;
 
 /**
  * Message containing sensor readings.
  */
 public class SensorReadingMessage extends Message {
-  List<Sensor> sensors;
-  String nodeid;
+  List<SensorReading> sensorReadings;
+  int nodeid;
 
-    /**
-     * Constructs a new SensorReadingMessage with node-id and a list of sensors.
-     *
-     * @param nodeid  The id of the node.
-     * @param sensors The list of sensors.
-     */
-  public SensorReadingMessage(String nodeid, List<Sensor> sensors) {
-    this.sensors = sensors;
+  public SensorReadingMessage(List<Sensor> sensors, int nodeId) {
+    this.nodeid = nodeId;
+    this.sensorReadings = new ArrayList<>();
+    for (Sensor sensor : sensors) {
+      sensorReadings.add(sensor.getReading());
+    }
+  }
+
+  public int getNodeid() {
+    return nodeid;
+  }
+
+  /**
+   * Constructs a new SensorReadingMessage with node-id and a list of sensors.
+   *
+   * @param nodeid  The id of the node.
+   * @param sensors The list of sensors.
+   */
+  public SensorReadingMessage(int nodeid, List<SensorReading> sensors) {
+    this.sensorReadings = sensors;
     this.nodeid = nodeid;
   }
 
-    /**
+  public List<SensorReading> getSensorReadings() {
+    return sensorReadings;
+  }
+
+  /**
      * Gets the list of sensors and their readings.
      *
      * @return The list of sensors.
@@ -35,12 +53,13 @@ public class SensorReadingMessage extends Message {
     builder.append(nodeid);
     builder.append("|");
 
-    for (Sensor sensor : sensors) {
-      builder.append(sensor.getType());
+
+    for (SensorReading sensorReading : sensorReadings) {
+      builder.append(sensorReading.getType());
       builder.append(":");
-      builder.append(sensor.getReading().getValue());
+      builder.append(sensorReading.getValue());
       builder.append(":");
-      builder.append(sensor.getReading().getUnit());
+      builder.append(sensorReading.getUnit());
       builder.append("/");
     }
 

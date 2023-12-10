@@ -7,7 +7,15 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+
+import no.ntnu.communication.Message;
+import no.ntnu.communication.MessageSerializer;
+import no.ntnu.communication.messages.BroadCastStateMessage;
+import no.ntnu.communication.messages.ListOfNodesMessage;
+import no.ntnu.communication.messages.SensorReadingMessage;
+import no.ntnu.communication.messages.StateMessage;
 import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.server.GreenhouseServer;
 import no.ntnu.tools.Logger;
@@ -43,39 +51,17 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   }
 
   /**
-   * Initializes nodes based on the provided tokens. Each token represents a node and its actuators.
+   * Initializes nodes based on the provided response. Each token represents a node and its actuators.
    *
-   * @param tokens The tokens representing the nodes and their actuators.
+   * @param response The response representing the nodes and their actuators.
    */
-  public void initNodes(String[] tokens) {
-    for (int i = 1; i < tokens.length; i++) {
-      Logger.info("Adding node " + tokens[i]);
-
-
-      String[] nodeTokens = tokens[i].split(":");
-      int nodeId = Parser.parseIntegerOrError(nodeTokens[0],
-          "Could not initialize nodes, invalid nodeid");
-      SensorActuatorNodeInfo nodeInfo = new SensorActuatorNodeInfo(nodeId);
-      if (nodeTokens.length > 1) {
-        for (int j = 1; j < nodeTokens.length; j++) {
-          String[] actuatorTokens = nodeTokens[j].split("/");
-          nodeInfo.addActuator(
-              new Actuator(Parser.parseIntegerOrError(
-                  actuatorTokens[0], "Could not initialize node, invalid actuatorid"),
-                  actuatorTokens[1], nodeId));
-          if (actuatorTokens.length > 2 && actuatorTokens[2].equals("on")) {
-            nodeInfo.getActuator(Parser.parseIntegerOrError(
-                actuatorTokens[0], "Error: Could not parse actuator state")).set(true);
-          } else if (actuatorTokens[2].equals("off")) {
-            nodeInfo.getActuator(Parser.parseIntegerOrError(
-                actuatorTokens[0], "Error: Could not parse actuator state")).set(false);
-          }
-          Logger.info("Added actuator " + actuatorTokens[0] + " to node " + nodeId);
-        }
-      }
-
-      logic.onNodeAdded(nodeInfo);
-    }
+  public void initNodes(String response) {
+    ListOfNodesMessage nodesMessage = (ListOfNodesMessage) MessageSerializer.fromString(response.toString());
+    nodesMessage.getNodes().forEach(node -> {
+      SensorActuatorNodeInfo sensorActuatorNodeInfo = new SensorActuatorNodeInfo(node.getId());
+      node.getActuators().forEach(actuator -> sensorActuatorNodeInfo.addActuator(actuator));
+      logic.onNodeAdded(sensorActuatorNodeInfo);
+    });
   }
 
   /**
@@ -107,18 +93,13 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
       Logger.info("Received message: " + response);
 
       switch (tokens[0]) {
-        case "sensorReading":
-          logic.onSensorData(Parser.parseIntegerOrError(tokens[1], "Could not parse token"),
-              parseSensorReading(tokens[2]));
+        case "sensorReading": parseSensorReading(response);
           break;
-        case "nodes":
-          initNodes(tokens);
+        case "nodes": initNodes(response);
           break;
-        case "state":
-          parseStateMessage(tokens[1], tokens[2], tokens[3]);
+        case "state": parseStateMessage(response);
           break;
-        case "broadCastState":
-          parseBroadcastStateMessage(tokens[1], tokens[2]);
+        case "broadCastState": parseBroadcastStateMessage(response);
           break;
         default:
           Logger.error("Unknown message type: " + tokens[0]);
@@ -150,30 +131,23 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   /**
    * Parses a state message.
    *
-   * @param nodeid     The node ID.
-   * @param actuatorid The actuator ID.
-   * @param state      The state of the actuator.
+   * @param response The response to parse.
    */
-  public void parseStateMessage(String nodeid, String actuatorid, String state) {
-    boolean stateBool = state.equals("on");
-    logic.onActuatorStateChanged(Parser.parseIntegerOrError(nodeid,
-            "Could not parse nodeid in statemessage"),
-        Parser.parseIntegerOrError(actuatorid, "Could not parse nodeid in statemessage"),
-        stateBool);
+  public void parseStateMessage(String response) {
+    StateMessage stateMessage = (StateMessage) MessageSerializer.fromString(response);
+    logic.onActuatorStateChanged(stateMessage.getNodeid(), stateMessage.getActuatorid(), stateMessage.getState());
   }
 
   /**
    * Parses a broadcast state message.
    *
-   * @param nodeid The node ID.
-   * @param state  The state of the node.
+   * @param response The response to parse.
    */
-  public void parseBroadcastStateMessage(String nodeid, String state) {
-    Logger.info("broadcaststate method");
-    boolean stateBool = state.equals("on");
-    logic.onAllActuatorChange(Parser.parseIntegerOrError(nodeid,
-            "Could not parse nodeid in parseBroadCastMessage"),
-        stateBool);
+  public void parseBroadcastStateMessage(String response) {
+    Logger.info("rcc parsing: " + response);
+
+    BroadCastStateMessage broadCastStateMessage = (BroadCastStateMessage) MessageSerializer.fromString(response);
+    logic.onAllActuatorChange(broadCastStateMessage.getNodeid(), broadCastStateMessage.getState());
   }
 
 
@@ -183,17 +157,9 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
    * @param sensorReading The sensor reading string to parse.
    * @return A list of SensorReading objects representing the parsed sensor readings.
    */
-  public List<SensorReading> parseSensorReading(String sensorReading) {
-    Logger.info("Parsing sensor reading: " + sensorReading);
-    ArrayList<SensorReading> sensorReadings = new ArrayList<>();
-    String[] sensors = sensorReading.split("/");
-    for (String sensor : sensors) {
-      String[] sensorTokens = sensor.split(":");
-      sensorReadings.add(
-          new SensorReading(sensorTokens[0], Double.parseDouble(sensorTokens[1]), sensorTokens[2]));
-    }
-    sensorReadings.forEach(SensorReading -> Logger.info(SensorReading.toString()));
-    return sensorReadings;
+  public void parseSensorReading(String sensorReading) {
+    SensorReadingMessage sensorReadingMessage = (SensorReadingMessage) MessageSerializer.fromString(sensorReading);
+    logic.onSensorData(sensorReadingMessage.getNodeid(), sensorReadingMessage.getSensorReadings());
   }
 
   /**

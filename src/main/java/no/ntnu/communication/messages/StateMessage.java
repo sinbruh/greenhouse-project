@@ -8,19 +8,19 @@ import no.ntnu.communication.Message;
 public class StateMessage extends Message {
   int nodeid;
   int actuatorid;
-  boolean value;
+  boolean state;
 
   /**
    * Constructor for the StateMessage class.
    *
    * @param nodeid The ID of the node containing the actuator.
    * @param actuatorid The ID of the actuator.
-   * @param value The state the actuator should be set to.
+   * @param state The state the actuator should be set to.
    */
-  public StateMessage(int nodeid, int actuatorid, boolean value) {
+  public StateMessage(int nodeid, int actuatorid, boolean state) {
     this.nodeid = nodeid;
     this.actuatorid = actuatorid;
-    this.value = value;
+    this.state = state;
   }
 
     /**
@@ -31,6 +31,18 @@ public class StateMessage extends Message {
      */
   @Override
   public String messageAsString() {
-    return "state|" + nodeid + "|" + actuatorid + "|" + (value ? "on" : "off");
+    return "state|" + nodeid + "|" + actuatorid + "|" + (state ? "on" : "off");
+  }
+
+  public int getNodeid() {
+    return nodeid;
+  }
+
+  public int getActuatorid() {
+    return actuatorid;
+  }
+
+  public boolean getState() {
+    return state;
   }
 }

@@ -11,10 +11,10 @@ import no.ntnu.tools.Parser;
  * Command class that will set the state of an all actuators on a node.
  */
 public class BroadCastSetStateCommand extends Command {
-  private final String nodeid;
-  private final String state;
+  private final int nodeid;
+  private final boolean state;
 
-  public BroadCastSetStateCommand(String nodeid, String state) {
+  public BroadCastSetStateCommand(int nodeid, boolean state) {
     this.nodeid = nodeid;
     this.state = state;
   }
@@ -26,8 +26,7 @@ public class BroadCastSetStateCommand extends Command {
 
   @Override
   public Message execute(GreenhouseSimulator simulator) {
-    simulator.getNodes().get(Parser.parseIntegerOrError(nodeid, "")).getActuators().forEach(
-        actuator -> actuator.set(state.equals("on")));
+    simulator.getNodes().get(nodeid).getActuators().forEach(actuator -> actuator.set(state));
     return new BroadCastStateMessage(nodeid, state);
   }
 }

@@ -19,6 +19,7 @@ import no.ntnu.greenhouse.Sensor;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
 import no.ntnu.tools.Logger;
+import no.ntnu.tools.Parser;
 
 /**
  * The ClientHandler class is responsible for managing the communication with a single client.
@@ -156,7 +157,8 @@ public class ClientHandler extends Thread implements SensorListener, ActuatorLis
   @Override
   public void sensorsUpdated(String nodeid, List<Sensor> sensors) {
     if (readyToReceive) {
-      sendResponseToClient(new SensorReadingMessage(nodeid, sensors));
+      sendResponseToClient(new SensorReadingMessage(sensors,
+              Parser.parseIntegerOrError(nodeid, "Could not parse nodeid")));
     }
   }
 

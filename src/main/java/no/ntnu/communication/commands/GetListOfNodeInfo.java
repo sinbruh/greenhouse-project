@@ -4,6 +4,10 @@ import no.ntnu.communication.Command;
 import no.ntnu.communication.Message;
 import no.ntnu.communication.messages.ListOfNodesMessage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
+import no.ntnu.greenhouse.NodeInterface;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Command to get a list of all nodes in the system. The list is sent as a ListOfNodesMessage.
@@ -18,7 +22,9 @@ public class GetListOfNodeInfo extends Command {
    */
   @Override
   public Message execute(GreenhouseSimulator simulator) {
-    return new ListOfNodesMessage(simulator.getNodes().values());
+    Collection<NodeInterface> nodes = new ArrayList<>();
+    simulator.getNodes().values().forEach(node -> nodes.add(node));
+    return new ListOfNodesMessage(nodes);
   }
 
   /**

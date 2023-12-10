@@ -1,5 +1,7 @@
 package no.ntnu.tools;
 
+import java.util.zip.DataFormatException;
+
 /**
  * A helper class for parsing strings.
  */
@@ -42,6 +44,25 @@ public class Parser {
       return Double.parseDouble(s);
     } catch (NumberFormatException e) {
       throw new NumberFormatException(errorMessage);
+    }
+  }
+
+  /**
+   * Try to parse a string as a boolean, show an error message when the parsing fails.
+   *
+   * @param s            The string to parse
+   * @param errorMessage The error message to show if parsing fails
+   * @return The boolean contained in the string
+   * @throws DataFormatException When the provided string does not contain a valid boolean,
+   *                               throw an exception with the provided error message
+   */
+  public static boolean parseBooleanOrError(String s, String errorMessage) throws DataFormatException {
+    if (s.equals("on")) {
+      return true;
+    } else if (s.equals("off")) {
+      return false;
+    } else {
+      throw new DataFormatException(errorMessage);
     }
   }
 }

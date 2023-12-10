@@ -6,8 +6,8 @@ import no.ntnu.communication.Message;
  * Message class that will broadcast the state of all actuators on a node.
  */
 public class BroadCastStateMessage extends Message {
-  private final String nodeid;
-  private final String state;
+  private final int nodeid;
+  private final boolean state;
 
   /**
    * Constructor for the BroadCastStateMessage class. Represents a broadcast
@@ -15,9 +15,17 @@ public class BroadCastStateMessage extends Message {
    * @param nodeid ID of the node.
    * @param state State of the actuators on the node.
    */
-  public BroadCastStateMessage(String nodeid, String state) {
+  public BroadCastStateMessage(int nodeid, boolean state) {
     this.nodeid = nodeid;
     this.state = state;
+  }
+
+  public int getNodeid() {
+    return nodeid;
+  }
+
+  public boolean getState() {
+    return state;
   }
 
     /**
@@ -26,6 +34,6 @@ public class BroadCastStateMessage extends Message {
      */
   @Override
   public String messageAsString() {
-    return "broadCastState|" + nodeid + "|" + state;
+    return "broadCastState|" + nodeid + "|" + (state ? "on" : "off");
   }
 }

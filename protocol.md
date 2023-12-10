@@ -27,9 +27,7 @@ handles all of this for us.
 
 The architecture consists of a central server that connects to multiple control panels. The server will also
 talk to the greenhouse simulator, but all the networking is done on the server not the greenhouse simulator. The
-greenhouse simulator is where all the sensor and actuator nodes are located. 
-
-[Server Architecture](images/GreenhouseServerArchitecture.png)
+greenhouse simulator is where all the sensor and actuator nodes are located.
 
 ## The flow of information and events
 
