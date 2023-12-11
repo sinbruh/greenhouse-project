@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import no.ntnu.communication.Message;
 import no.ntnu.communication.MessageSerializer;
 import no.ntnu.communication.messages.BroadCastStateMessage;
 import no.ntnu.communication.messages.ListOfNodesMessage;
@@ -43,22 +44,6 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
   }
 
   /**
-   * Initializes nodes based on the provided response.
-   * Each token represents a node and its actuators.
-   *
-   * @param response The response representing the nodes and their actuators.
-   */
-  public void initNodes(String response) {
-    ListOfNodesMessage nodesMessage = (ListOfNodesMessage)
-            MessageSerializer.fromString(response.toString());
-    nodesMessage.getNodes().forEach(node -> {
-      SensorActuatorNodeInfo sensorActuatorNodeInfo = new SensorActuatorNodeInfo(node.getId());
-      node.getActuators().forEach(actuator -> sensorActuatorNodeInfo.addActuator(actuator));
-      logic.onNodeAdded(sensorActuatorNodeInfo);
-    });
-  }
-
-  /**
    * Sends a command to get the list of nodes.
    */
   public void sendGetNodesCommand() {
@@ -83,27 +68,95 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
         }
       }
 
-      String[] tokens = response.split("\\|");
       Logger.info("Received message: " + response);
 
-      switch (tokens[0]) {
+      Message message = MessageSerializer.fromString(response);
+
+      switch (message.getClass().getSimpleName()) {
         case "sensorReading":
-          parseSensorReading(response);
+          handleSensorReading((SensorReadingMessage) message);
           break;
         case "nodes":
-          initNodes(response);
+          handleNodesMessage((ListOfNodesMessage) message);
           break;
         case "state":
-          parseStateMessage(response);
+          handleStateMessage((StateMessage) message);
           break;
         case "broadCastState":
-          parseBroadcastStateMessage(response);
+          handleBroadcastStateMessage((BroadCastStateMessage) message);
           break;
         default:
-          Logger.error("Unknown message type: " + tokens[0]);
+          Logger.error("Unknown message type: " + message.getClass().getSimpleName());
           break;
       }
     }
+  }
+
+  /**
+   * Reads a response from the server.
+   *
+   * @return The response from the server, or null if an error occurred while reading the response.
+   */
+  public String readResponse() {
+    String response = null;
+    try {
+      response = socketReader.readLine();
+    } catch (IOException e) {
+      Logger.info("Could not read response from server");
+    }
+    return response;
+  }
+
+  /**
+   * Initializes nodes based on the provided message.
+   * Each token represents a node and its actuators.
+   *
+   * @param message The message representing the nodes and their actuators.
+   */
+  public void handleNodesMessage(ListOfNodesMessage message) {
+    message.getNodes().forEach(node -> {
+      SensorActuatorNodeInfo sensorActuatorNodeInfo = new SensorActuatorNodeInfo(node.getId());
+      node.getActuators().forEach(actuator -> sensorActuatorNodeInfo.addActuator(actuator));
+      logic.onNodeAdded(sensorActuatorNodeInfo);
+    });
+  }
+
+  /**
+   * Parses a state message.
+   *
+   * @param message The response to parse.
+   */
+  public void handleStateMessage(StateMessage message) {
+    logic.onActuatorStateChanged(message.getNodeid(), message.getActuatorid(), message.getState());
+  }
+
+  /**
+   * Parses a broadcast state message.
+   *
+   * @param message The response to parse.
+   */
+  public void handleBroadcastStateMessage(BroadCastStateMessage message) {
+    logic.onAllActuatorChange(message.getNodeid(), message.getState());
+  }
+
+
+  /**
+   * Parses a sensor reading string into a list of SensorReading objects.
+   *
+   * @param sensorReadingMessage The sensor reading string to parse.
+   */
+  public void handleSensorReading(SensorReadingMessage sensorReadingMessage) {
+    logic.onSensorData(sensorReadingMessage.getNodeid(), sensorReadingMessage.getSensorReadings());
+  }
+
+  /**
+   * Checks if the communication channel is open.
+   *
+   * @return true if the communication channel is open, false otherwise.
+   */
+  @Override
+  public boolean open() {
+    return isOpen;
   }
 
   private void reconnect() {
@@ -124,67 +177,6 @@ public class RealCommunicationChannel extends Thread implements CommunicationCha
     }
     Logger.error("Failed to reconnect after " + MAX_RECONNECT_ATTEMPTS + " attempts");
 
-  }
-
-  /**
-   * Parses a state message.
-   *
-   * @param response The response to parse.
-   */
-  public void parseStateMessage(String response) {
-    StateMessage stateMessage = (StateMessage) MessageSerializer.fromString(response);
-    logic.onActuatorStateChanged(stateMessage.getNodeid(),
-            stateMessage.getActuatorid(), stateMessage.getState());
-  }
-
-  /**
-   * Parses a broadcast state message.
-   *
-   * @param response The response to parse.
-   */
-  public void parseBroadcastStateMessage(String response) {
-    Logger.info("rcc parsing: " + response);
-
-    BroadCastStateMessage broadCastStateMessage =
-            (BroadCastStateMessage) MessageSerializer.fromString(response);
-    logic.onAllActuatorChange(broadCastStateMessage.getNodeid(), broadCastStateMessage.getState());
-  }
-
-
-  /**
-   * Parses a sensor reading string into a list of SensorReading objects.
-   *
-   * @param sensorReading The sensor reading string to parse.
-   */
-  public void parseSensorReading(String sensorReading) {
-    SensorReadingMessage sensorReadingMessage =
-            (SensorReadingMessage) MessageSerializer.fromString(sensorReading);
-    logic.onSensorData(sensorReadingMessage.getNodeid(), sensorReadingMessage.getSensorReadings());
-  }
-
-  /**
-   * Checks if the communication channel is open.
-   *
-   * @return true if the communication channel is open, false otherwise.
-   */
-  @Override
-  public boolean open() {
-    return isOpen;
-  }
-
-  /**
-   * Reads a response from the server.
-   *
-   * @return The response from the server, or null if an error occurred while reading the response.
-   */
-  public String readResponse() {
-    String response = null;
-    try {
-      response = socketReader.readLine();
-    } catch (IOException e) {
-      Logger.info("Could not read response from server");
-    }
-    return response;
   }
 
   /**
